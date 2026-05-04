@@ -167,7 +167,7 @@
         </el-tab-pane>
         
         <!-- 人工客服对话 -->
-        <el-tab-pane label="人工客服对话" name="chat">
+        <el-tab-pane label="人工客服对话" name="chat" v-if="false">
           <div class="chat-container">
             <!-- 待处理对话列表 -->
 <div class="chat-list-panel">
@@ -733,7 +733,7 @@ const wsService = ref(null)
 const wsConnected = ref(false)
 
 // 当前激活的标签页
-const activeTab = ref('chat')
+const activeTab = ref('ai-config')
 
 // AI客服配置
 const configLoading = ref(false)
