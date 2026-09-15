@@ -376,7 +376,7 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: '数据大屏',
-      hideLayout: false
+      hideLayout: true
     }
   },
   {
