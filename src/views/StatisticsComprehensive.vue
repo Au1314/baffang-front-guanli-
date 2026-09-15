@@ -354,7 +354,7 @@ onMounted(() => {
   align-items: center;
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .header-left {
@@ -366,13 +366,13 @@ onMounted(() => {
 .page-title {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .card-subheader {
   font-size: 14px;
   font-weight: bold;
-  color: #606266;
+  color: var(--color-text-regular);
 }
 
 .loading-container {
@@ -393,7 +393,7 @@ onMounted(() => {
 .analysis-text {
   white-space: pre-wrap;
   line-height: 1.6;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .metrics-overview-card {
@@ -438,7 +438,7 @@ h4 {
   margin: 0;
   font-size: 14px;
   font-weight: bold;
-  color: #606266;
+  color: var(--color-text-regular);
 }
 
 .efficiency-metrics,
@@ -457,23 +457,23 @@ h4 {
 
 .metric-label {
   font-size: 12px;
-  color: #909399;
+  color: var(--color-text-secondary);
   margin-bottom: 5px;
 }
 
 .metric-value {
   font-size: 20px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .pending-total {
   font-size: 32px;
   font-weight: bold;
-  color: #f56c6c;
+  color: var(--color-danger);
   text-align: center;
   padding: 20px;
-  background-color: #fef0f0;
+  background-color: var(--color-danger-light);
   border-radius: 4px;
 }
 

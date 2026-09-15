@@ -175,6 +175,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { authApi } from '@/api/auth'
+import { getAuditStatusType as getStatusType } from '@/utils/statusMaps'
+import { usePagination } from '@/composables/usePagination'
 
 // 加载状态
 const loading = ref(false)
@@ -190,13 +192,13 @@ const filterForm = reactive({
   auditType: 2 // 固定为充电桩投诉类型
 })
 
-// 分页信息
-const pagination = reactive({
-  pageNum: 1,
+// 分页 —— 走统一的 usePagination composable
+const { pageNum, pageSize, total, handleSizeChange, handleCurrentChange } = usePagination({
   pageSize: 10,
-  total: 0,
-  pages: 0
+  onChange: () => fetchComplaintList()
 })
+// 模板兼容层：保留 pagination.xxx 写法不用改
+const pagination = reactive({ pageNum, pageSize, total })
 
 // 投诉列表数据
 const complaintList = ref([])
@@ -253,26 +255,6 @@ const auditRules = {
   ]
 }
 
-// 获取状态类型
-const getStatusType = (status) => {
-  switch (status) {
-    case 0: // 待审核
-      return 'info'
-    case 1: // 审核中
-      return 'warning'
-    case 2: // 已通过
-      return 'success'
-    case 3: // 已拒绝
-      return 'danger'
-    case 4: // 需补充材料
-      return 'warning'
-    case 5: // 已撤回
-      return 'info'
-    default:
-      return 'info'
-  }
-}
-
 // 获取投诉列表
 const fetchComplaintList = async () => {
   loading.value = true
@@ -293,7 +275,6 @@ const fetchComplaintList = async () => {
     const response = await authApi.getComplaintList(params)
     complaintList.value = response.list || []
     pagination.total = response.total || 0
-    pagination.pages = response.pages || 0
   } catch (error) {
     console.error('获取投诉审核列表失败:', error)
     ElMessage.error('获取投诉审核列表失败')
@@ -314,18 +295,6 @@ const resetFilter = () => {
   fetchComplaintList()
 }
 
-// 分页大小变化
-const handleSizeChange = (size) => {
-  pagination.pageSize = size
-  pagination.pageNum = 1
-  fetchComplaintList()
-}
-
-// 页码变化
-const handleCurrentChange = (page) => {
-  pagination.pageNum = page
-  fetchComplaintList()
-}
 
 // 查看详情
 const handleViewDetail = async (row) => {

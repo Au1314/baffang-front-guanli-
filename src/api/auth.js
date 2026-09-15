@@ -11,12 +11,7 @@ export const authApi = {
     return request.post('/auth/logout')
   },
   
-  // 获取管理员信息
-  getAdminInfo() {
-    return request.get('/auth/info')
-  },
-  
-  // 获取管理员个人信息（新API）
+  // 获取管理员个人信息
   getProfile() {
     return request.get('/profile')
   },
@@ -32,17 +27,12 @@ export const authApi = {
     })
   },
   
-  // 更新管理员个人信息（新API）
+  // 更新管理员个人信息
   updateProfile(data) {
     return request.put('/profile', data)
   },
-  
-  // 更新管理员信息（旧API，保留兼容）
-  updateAdminInfo(data) {
-    return request.put('/auth/info', data)
-  },
-  
-  // 修改密码（新API）
+
+  // 修改密码
   changePassword(data) {
     return request.put('/profile/password', data)
   },
@@ -77,36 +67,21 @@ export const authApi = {
   
   // 邀请码管理
   generateInviteCode(data) {
-    console.log('调用generateInviteCode，数据:', data)
     return request.post('/auth/invite-code/generate', data)
   },
   getInviteCodeList(params) {
     return request.get('/auth/invite-code/list', { params })
   },
+  // 修改邀请码状态 PUT /invite-code/{codeId}/status?status=0/1
   updateInviteCodeStatus(codeId, status) {
-    console.log('调用updateInviteCodeStatus，codeId:', codeId, 'status:', status)
-    // 根据API文档，修改邀请码状态的API是PUT /invite-code/{codeId}/status?status=0/1
-    const url = `/invite-code/${codeId}/status`
-    const params = { status }
-    console.log('请求URL:', url)
-    console.log('请求参数:', params)
-    return request.put(url, {}, { params })
+    return request.put(`/invite-code/${codeId}/status`, {}, { params: { status } })
   },
   deleteInviteCode(codeId) {
-    console.log('调用deleteInviteCode，codeId:', codeId)
-    // 删除邀请码的API是DELETE /invite-code/{codeId}
-    const url = `/invite-code/${codeId}`
-    console.log('请求URL:', url)
-    return request.delete(url)
+    return request.delete(`/invite-code/${codeId}`)
   },
+  // 批量删除邀请码 DELETE /invite-code/batch，请求体为整数数组
   batchDeleteInviteCode(ids) {
-    console.log('调用batchDeleteInviteCode，ids:', ids)
-    // 批量删除邀请码的API是DELETE /invite-code/batch
-    // 根据API文档，请求体应该是一个整数数组，而不是一个包含ids字段的对象
-    const url = `/invite-code/batch`
-    console.log('请求URL:', url)
-    console.log('请求数据:', ids)
-    return request.delete(url, { data: ids })
+    return request.delete('/invite-code/batch', { data: ids })
   },
   
   // 参数配置
@@ -135,19 +110,11 @@ export const authApi = {
   getAuditDetail(id) {
     return request.get(`/audit/${id}`)
   },
-  // 私桩认证审核
-  auditPrivatePile(data) {
-    return request.post('/audit/private-pile', data)
-  },
-  // 私人电桩认证审核（新API）
+  // 私人电桩认证审核
   auditPrivateStation(data) {
     return request.post('/auth/station/review', data)
   },
   // 车主认证审核
-  auditCarOwner(data) {
-    return request.put('/audit/car-owner', data)
-  },
-  // 车主认证审核（新API）
   auditVehicle(data) {
     return request.post('/audit/vehicle/review', data)
   },
@@ -189,21 +156,13 @@ export const authApi = {
   batchAudit(data) {
     return request.put('/audit/batch', data)
   },
-  // 获取私桩待审核列表
-  getPrivatePileAuditList(params) {
-    return request.get('/audit/private-pile/list', { params })
-  },
-  // 获取私人电桩待审核列表（新API）
+  // 获取私人电桩待审核列表
   getPrivateStationAuditList(params) {
     return request.get('/auth/station/list', { params })
   },
   // 获取私人电桩认证详情
   getPrivateStationAuthDetail(stationId) {
     return request.get(`/auth/station/detail/${stationId}`)
-  },
-  // 获取私桩认证详情
-  getPrivatePileAuditDetail(id) {
-    return request.get(`/audit/private-pile/${id}`)
   },
 
   // 数据导出相关API
@@ -634,7 +593,7 @@ export const authApi = {
 
   // AI风险评估
   riskAssessment(params) {
-    return request.post('ai/decision/risk/assess', {}, {
+    return request.post('/ai/decision/risk/assess', {}, {
       params,
       timeout: 180000 // 3分钟超时
     })
@@ -642,14 +601,14 @@ export const authApi = {
 
   // 处理决策
   handleDecision(params) {
-    return request.post('ai/decision/handle', params, {
+    return request.post('/ai/decision/handle', params, {
       timeout: 180000 // 3分钟超时
     })
   },
 
   // 手动执行决策
   executeDecision(decisionId) {
-    return request.post(`ai/decision/execute/${decisionId}`, {}, {
+    return request.post(`/ai/decision/execute/${decisionId}`, {}, {
       timeout: 180000 // 3分钟超时
     })
   }

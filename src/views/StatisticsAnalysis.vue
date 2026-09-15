@@ -141,12 +141,12 @@ const formatTime = (timeStr) => {
   justify-content: space-between;
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .header-icon {
   font-size: 18px;
-  color: #909399;
+  color: var(--color-text-secondary);
   cursor: help;
 }
 
@@ -162,7 +162,7 @@ const formatTime = (timeStr) => {
   background-color: #fafafa;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
 }
 
 .result-header {
@@ -175,34 +175,34 @@ const formatTime = (timeStr) => {
 .result-title {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .result-content {
   line-height: 1.8;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 /* Markdown样式 */
 .result-content :deep(.md-h2) {
   font-size: 20px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   margin: 20px 0 15px 0;
   padding-bottom: 10px;
-  border-bottom: 2px solid #409eff;
+  border-bottom: 2px solid var(--color-primary);
 }
 
 .result-content :deep(.md-h3) {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   margin: 15px 0 10px 0;
 }
 
 .result-content :deep(.md-bold) {
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .result-content :deep(.md-list) {

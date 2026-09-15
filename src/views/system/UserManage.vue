@@ -522,7 +522,7 @@ onMounted(() => {
 .search-form {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
 }
 

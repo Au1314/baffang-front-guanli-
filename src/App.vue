@@ -5,7 +5,9 @@
     </template>
     <template v-else>
       <MainLayout>
-        <component :is="Component" />
+        <transition name="fade-slide" mode="out-in">
+          <component :is="Component" :key="$route.path" />
+        </transition>
       </MainLayout>
     </template>
   </router-view>
@@ -30,5 +32,21 @@ body {
 
 #app {
   min-height: 100vh;
+}
+
+/* 路由切换过渡动画 */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>

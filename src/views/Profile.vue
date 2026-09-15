@@ -44,7 +44,7 @@
             <el-col :span="12">
               <div class="info-item">
                 <label class="info-label">最后登录时间</label>
-                <div class="info-value">{{ formatDate(userInfo.lastLoginTime) || '-' }}</div>
+                <div class="info-value">{{ formatDateTime(userInfo.lastLoginTime) || '-' }}</div>
               </div>
             </el-col>
             
@@ -52,7 +52,7 @@
             <el-col :span="24">
               <div class="info-item">
                 <label class="info-label">创建时间</label>
-                <div class="info-value">{{ formatDate(userInfo.createTime) || '-' }}</div>
+                <div class="info-value">{{ formatDateTime(userInfo.createTime) || '-' }}</div>
               </div>
             </el-col>
           </el-row>
@@ -158,9 +158,10 @@ import { ref, reactive, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { UserFilled, Upload, Loading } from '@element-plus/icons-vue'
 import { authApi } from '@/api/auth'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
+import { formatDateTime } from '@/utils/dateFormat'
 
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 // 用户信息数据
 const userInfo = ref({
@@ -242,38 +243,16 @@ const addTimestamp = (url) => {
   return url.includes('?') ? `${url}&timestamp=${timestamp}` : `${url}?timestamp=${timestamp}`
 }
 
-// 格式化日期
-const formatDate = (dateString) => {
-  if (!dateString) return ''
-  try {
-    const date = new Date(dateString)
-    return date.toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    })
-  } catch (e) {
-    return dateString
-  }
-}
-
 // 获取个人信息
 const getProfileInfo = async () => {
   try {
-    console.log('开始调用getProfile API...')
     const profileData = await authApi.getProfile()
-    console.log('API响应数据:', profileData)
-    console.log('响应类型:', typeof profileData)
     
     // 检查响应格式 - 注意：由于响应拦截器的处理，返回的直接是res.data
     if (typeof profileData === 'object' && profileData !== null) {
       // 检查是否包含id字段，判断是否是有效的管理员信息
       if (profileData.id !== undefined) {
         userInfo.value = profileData
-        console.log('个人信息更新成功:', userInfo.value)
       } else {
         console.error('API返回错误，缺少必要字段:', profileData)
         ElMessage.error('获取个人信息失败：数据格式错误')
@@ -297,15 +276,12 @@ const getProfileInfo = async () => {
 
 // 编辑资料
 const editProfile = () => {
-  console.log('开始编辑资料...')
   // 填充编辑表单
   editForm.name = userInfo.value.name
   // 添加时间戳，破坏缓存
   editForm.avatar = addTimestamp(userInfo.value.avatar || '')
-  console.log('编辑表单已填充，头像URL:', editForm.avatar)
   // 显示编辑对话框
   dialogVisible.value = true
-  console.log('编辑对话框已显示')
 }
 
 // 显示修改密码对话框
@@ -368,54 +344,35 @@ const changePassword = async () => {
 // 保存资料
 const saveProfile = async () => {
   try {
-    console.log('开始保存资料...')
     
     // 表单验证
-    console.log('开始表单验证...')
     await editFormRef.value.validate()
-    console.log('表单验证成功')
     
     // 显示保存加载状态
     saveLoading.value = true
-    console.log('保存加载状态已显示')
     
-    // 调用更新API
-    console.log('开始调用更新API...')
-    console.log('更新API参数:', {
-      name: editForm.name,
-      avatar: editForm.avatar
-    })
     await authApi.updateProfile({
       name: editForm.name,
       avatar: editForm.avatar
     })
-    console.log('更新API调用成功')
     
     // 更新本地数据
-    console.log('开始更新本地数据...')
     userInfo.value.name = editForm.name
-    console.log('用户名已更新:', userInfo.value.name)
     
     // 更新头像，添加时间戳，破坏缓存
     const avatarUrl = addTimestamp(editForm.avatar)
     userInfo.value.avatar = avatarUrl
-    console.log('头像已更新:', avatarUrl)
     
-    // 同步更新adminStore中的信息，确保右上角和控制台的头像也能显示
-    console.log('开始更新adminStore...')
-    adminStore.updateAdminInfo({
+    // 同步更新authStore中的信息，确保右上角和控制台的头像也能显示
+    authStore.updateAdminInfo({
       name: editForm.name,
       avatar: avatarUrl
     })
-    console.log('adminStore已更新')
     
     // 使用nextTick确保视图更新
-    console.log('等待视图更新...')
     await nextTick()
-    console.log('视图已更新')
     
     ElMessage.success('保存成功')
-    console.log('保存成功，关闭对话框')
     dialogVisible.value = false
   } catch (error) {
     console.error('保存失败:', error)
@@ -429,34 +386,27 @@ const saveProfile = async () => {
   } finally {
     // 隐藏保存加载状态
     saveLoading.value = false
-    console.log('保存加载状态已隐藏')
   }
 }
 
 // 处理头像选择变化
 const handleAvatarChange = async (file) => {
   try {
-    console.log('开始处理头像选择变化...')
-    console.log('文件对象:', file)
     
     // 正确获取选中的文件
     let selectedFile
     if (file.file) {
       // 如果是包含file和fileList的对象
       selectedFile = file.file
-      console.log('通过file.file获取到文件:', selectedFile)
     } else if (file.raw) {
       // 如果是Element Plus的UploadFile对象
       selectedFile = file.raw
-      console.log('通过file.raw获取到文件:', selectedFile)
     } else if (Array.isArray(file)) {
       // 如果是文件列表数组
       selectedFile = file[0]?.raw || file[0]
-      console.log('通过文件列表数组获取到文件:', selectedFile)
     } else if (file) {
       // 如果直接是文件对象
       selectedFile = file
-      console.log('直接获取到文件:', selectedFile)
     } else {
       console.error('无法获取到选中的文件')
       return
@@ -468,57 +418,43 @@ const handleAvatarChange = async (file) => {
     }
     
     // 手动调用上传前验证
-    console.log('开始验证头像...')
     const isValid = beforeAvatarUpload(selectedFile)
     if (!isValid) {
       console.error('头像验证失败')
       return
     }
-    console.log('头像验证成功')
     
     // 生成临时本地预览URL
-    console.log('开始生成本地预览URL...')
     const localUrl = URL.createObjectURL(selectedFile)
-    console.log('本地预览URL:', localUrl)
     
     // 更新编辑表单中的头像预览
     editForm.avatar = localUrl
-    console.log('编辑表单头像已更新为本地预览URL')
     
     // 显示上传加载状态
     uploadLoading.value = true
-    console.log('上传加载状态已显示')
     
     // 调用头像上传API
-    console.log('开始调用头像上传API...')
     const uploadResponse = await authApi.uploadAvatar(selectedFile)
-    console.log('头像上传API响应:', uploadResponse)
     
     // 保存上传后的头像URL到编辑表单，添加时间戳，破坏缓存
     const avatarUrl = addTimestamp(uploadResponse.data)
     editForm.avatar = avatarUrl
-    console.log('编辑表单头像已更新为服务器返回的URL:', avatarUrl)
     
     // 同时更新主页面的头像，添加时间戳，破坏缓存
     userInfo.value.avatar = avatarUrl
-    console.log('主页面头像已更新为服务器返回的URL:', avatarUrl)
     
-    // 同步更新adminStore中的头像信息
-    adminStore.updateAdminInfo({
+    // 同步更新authStore中的头像信息
+    authStore.updateAdminInfo({
       avatar: avatarUrl
     })
-    console.log('adminStore头像已更新')
     
     // 使用nextTick确保视图更新
     await nextTick()
-    console.log('视图已更新')
     
     // 释放本地URL，避免内存泄漏
     URL.revokeObjectURL(localUrl)
-    console.log('本地预览URL已释放')
     
     ElMessage.success('头像上传成功')
-    console.log('头像上传流程完成')
   } catch (error) {
     console.error('头像上传失败:', error)
     console.error('错误详情:', error.response || error.message || error)
@@ -526,7 +462,6 @@ const handleAvatarChange = async (file) => {
   } finally {
     // 隐藏上传加载状态
     uploadLoading.value = false
-    console.log('上传加载状态已隐藏')
   }
 }
 
@@ -565,7 +500,7 @@ onMounted(() => {
 .profile-header h2 {
   font-size: 24px;
   font-weight: 600;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .profile-content {
@@ -600,15 +535,15 @@ onMounted(() => {
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: #606266;
+  color: var(--color-text-regular);
   margin-bottom: 8px;
 }
 
 .info-value {
   font-size: 16px;
-  color: #303133;
+  color: var(--color-text-primary);
   padding: 8px 12px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 6px;
   min-height: 36px;
   display: flex;
@@ -628,7 +563,7 @@ onMounted(() => {
   justify-content: center;
   padding: 8px 16px;
   margin-top: 10px;
-  background-color: #409eff;
+  background-color: var(--color-primary);
   color: #ffffff;
   border-radius: 4px;
   cursor: pointer;
@@ -637,7 +572,7 @@ onMounted(() => {
 }
 
 .avatar-upload-btn:hover {
-  background-color: #66b1ff;
+  background-color: var(--color-primary-hover);
 }
 
 .dialog-footer {

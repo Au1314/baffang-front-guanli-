@@ -410,7 +410,7 @@ onMounted(() => {
 .search-form {
   margin-bottom: 20px;
   padding: 16px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -421,24 +421,8 @@ onMounted(() => {
 
 :deep(.el-form-item__label) {
   font-weight: 500;
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 14px;
-}
-
-:deep(.el-input__wrapper),
-:deep(.el-select__wrapper) {
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
-
-:deep(.el-input__wrapper:hover),
-:deep(.el-select__wrapper:hover) {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-:deep(.el-input__wrapper.is-focus),
-:deep(.el-select__wrapper.is-focus) {
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
 
 /* 操作栏样式 */
@@ -458,34 +442,13 @@ onMounted(() => {
 }
 
 .batch-delete-btn:not(:disabled) {
-  background-color: #f56c6c;
-  border-color: #f56c6c;
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .batch-delete-btn:not(:disabled):hover {
   background-color: #f78989;
   border-color: #f78989;
-}
-
-/* 表格样式优化 */
-:deep(.el-table) {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-:deep(.el-table__header-wrapper) {
-  background-color: #fafafa;
-}
-
-:deep(.el-table th) {
-  font-weight: 600;
-  color: #303133;
-  background-color: #fafafa;
-}
-
-:deep(.el-table tr:hover > td) {
-  background-color: #ecf5ff !important;
 }
 
 :deep(.el-table .cell) {
@@ -578,7 +541,7 @@ onMounted(() => {
 .content-text {
   flex: 1;
   padding: 15px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
   min-height: 100px;
   white-space: pre-wrap;

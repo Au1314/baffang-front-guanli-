@@ -153,7 +153,7 @@ onMounted(() => {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .query-card {
@@ -178,14 +178,14 @@ onMounted(() => {
 
 /* 详情弹窗样式 */
 .json-content {
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   padding: 10px;
   border-radius: 4px;
   overflow-x: auto;
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .ai-analysis-content {
@@ -201,7 +201,7 @@ onMounted(() => {
 .card-header {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .statistics-row {
@@ -222,42 +222,42 @@ onMounted(() => {
 
 .statistic-label {
   font-size: 14px;
-  color: #606266;
+  color: var(--color-text-regular);
   margin-bottom: 10px;
 }
 
 .statistic-value {
   font-size: 24px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .statistic-value.pending {
-  color: #e6a23c;
+  color: var(--color-warning);
 }
 
 .statistic-value.adopted {
-  color: #67c23a;
+  color: var(--color-success);
 }
 
 .statistic-value.today {
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .statistic-value.executed {
-  color: #909399;
+  color: var(--color-text-secondary);
 }
 
 .statistic-value.failed {
-  color: #f56c6c;
+  color: var(--color-danger);
 }
 
 .statistic-value.ignored {
-  color: #909399;
+  color: var(--color-text-secondary);
 }
 
 .statistic-value.confidence {
-  color: #67c23a;
+  color: var(--color-success);
 }
 
 .statistics-detail-row {
@@ -271,6 +271,6 @@ onMounted(() => {
 .detail-header {
   font-size: 14px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 </style>

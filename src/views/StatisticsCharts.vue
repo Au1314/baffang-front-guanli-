@@ -105,7 +105,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-import * as echarts from 'echarts'
+import echarts from '@/utils/echarts'
 import { authApi } from '@/api/auth'
 
 // 图表引用
@@ -148,15 +148,6 @@ const fetchChartData = async () => {
       authApi.getAuditStatistics()
     ])
     
-    console.log('完整API响应数据:', {
-      pileDistribution,
-      platformStats,
-      customerServiceStats,
-      emergencyStats,
-      forumStats,
-      auditStats
-    })
-    
     pileData.value = pileDistribution
     platformData.value = platformStats
     customerServiceData.value = customerServiceStats
@@ -181,22 +172,9 @@ const fetchChartData = async () => {
 
 // 初始化图表
 const initCharts = () => {
-  console.log('=== 开始初始化图表 ===')
-  console.log('图表容器状态:', {
-    pileDistributionChart: pileDistributionChart.value ? '存在' : '不存在',
-    transactionChart: transactionChart.value ? '存在' : '不存在',
-    userGrowthChart: userGrowthChart.value ? '存在' : '不存在',
-    customerServiceChart: customerServiceChart.value ? '存在' : '不存在',
-    emergencyChart: emergencyChart.value ? '存在' : '不存在',
-    forumChart: forumChart.value ? '存在' : '不存在',
-    auditChart: auditChart.value ? '存在' : '不存在'
-  })
-  
   // 1. 私桩分布图表
-  console.log('=== 初始化私桩分布图表 ===')
   if (pileDistributionChart.value) {
     const chart = echarts.init(pileDistributionChart.value)
-    console.log('私桩分布原始数据:', pileData.value)
     
     // 增强数据适配逻辑，处理多种可能的数据结构
     let distributionData = []
@@ -240,7 +218,6 @@ const initCharts = () => {
       }
     }
     
-    console.log('处理后的私桩分布数据:', distributionData)
     
     // 确保数据格式正确
     const chartData = distributionData.map(item => ({
@@ -257,7 +234,6 @@ const initCharts = () => {
       { name: '杭州', value: 70 }
     ]
     
-    console.log('最终私桩分布图表数据:', finalData)
     
     const option = {
       tooltip: { trigger: 'axis' },
@@ -336,7 +312,6 @@ const initCharts = () => {
   // 3. 用户增长趋势图表
   if (userGrowthChart.value) {
     const chart = echarts.init(userGrowthChart.value)
-    console.log('平台统计原始数据:', platformData.value)
     
     // 增强数据处理逻辑
     let processedData = {
@@ -387,7 +362,6 @@ const initCharts = () => {
       }
     }
     
-    console.log('处理后的平台统计数据:', processedData)
     
     // 确保数据长度一致，使用默认数据填充
     const months = ['1月', '2月', '3月', '4月', '5月', '6月']
@@ -407,12 +381,6 @@ const initCharts = () => {
     const finalNewUsers = processedData.newUsersTrend.length >= months.length ? 
       processedData.newUsersTrend.slice(0, months.length) : 
       [...processedData.newUsersTrend, ...defaultNewUsers].slice(0, months.length)
-    
-    console.log('最终用户增长数据:', {
-      finalDailyActive,
-      finalMonthlyActive,
-      finalNewUsers
-    })
     
     const option = {
       tooltip: { trigger: 'axis' },
@@ -461,7 +429,6 @@ const initCharts = () => {
   if (customerServiceChart.value) {
     const chart = echarts.init(customerServiceChart.value)
     const data = customerServiceData.value
-    console.log('客服统计原始数据:', data)
     
     // 增强数据处理和有效性检查
     let processedData = {
@@ -501,7 +468,6 @@ const initCharts = () => {
                                 typeof data.data?.goodRate === 'number' ? data.data.goodRate : 95
     }
     
-    console.log('处理后的客服统计数据:', processedData)
     
     // 数据有效性检查和范围限制
     const validateValue = (value, min, max) => {
@@ -516,7 +482,6 @@ const initCharts = () => {
       validateValue(processedData.praiseRate, 0, 100)
     ]
     
-    console.log('雷达图最终数据:', radarValue)
     
     const option = {
       tooltip: { trigger: 'item' },
@@ -549,7 +514,6 @@ const initCharts = () => {
   if (emergencyChart.value) {
     const chart = echarts.init(emergencyChart.value)
     const data = emergencyData.value
-    console.log('紧急响应统计原始数据:', data)
     
     // 增强数据处理逻辑
     let processedData = {
@@ -598,7 +562,6 @@ const initCharts = () => {
       }
     }
     
-    console.log('处理后的紧急响应数据:', processedData)
     
     // 确保数据长度一致，使用默认数据填充
     const months = ['1月', '2月', '3月', '4月', '5月', '6月']
@@ -613,11 +576,6 @@ const initCharts = () => {
     const finalResponseTime = processedData.avgResponseTimeTrend.length >= months.length ? 
       processedData.avgResponseTimeTrend.slice(0, months.length) : 
       [...processedData.avgResponseTimeTrend, ...defaultResponseTime].slice(0, months.length)
-    
-    console.log('最终紧急响应数据:', {
-      finalEventCount,
-      finalResponseTime
-    })
     
     const option = {
       tooltip: { trigger: 'axis' },
@@ -670,7 +628,6 @@ const initCharts = () => {
   if (forumChart.value) {
     const chart = echarts.init(forumChart.value)
     const data = forumData.value
-    console.log('论坛统计原始数据:', data)
     
     // 增强数据处理逻辑
     let processedData = {
@@ -744,7 +701,6 @@ const initCharts = () => {
       }
     }
     
-    console.log('处理后的论坛统计数据:', processedData)
     
     // 准备饼图数据
     const pieData = [
@@ -762,7 +718,6 @@ const initCharts = () => {
       { value: 10, name: '其他' }
     ]
     
-    console.log('最终论坛饼图数据:', finalData)
     
     const option = {
       tooltip: { trigger: 'item' },
@@ -797,7 +752,6 @@ const initCharts = () => {
   if (auditChart.value) {
     const chart = echarts.init(auditChart.value)
     const data = auditData.value
-    console.log('审核统计原始数据:', data)
     
     // 增强数据处理逻辑
     let processedData = {
@@ -871,7 +825,6 @@ const initCharts = () => {
       }
     }
     
-    console.log('处理后的审核统计数据:', processedData)
     
     // 准备柱状图数据
     const barData = [
@@ -885,7 +838,6 @@ const initCharts = () => {
     const hasValidData = barData.some(value => value > 0)
     const finalData = hasValidData ? barData : [30, 150, 20, 10]
     
-    console.log('最终审核统计数据:', finalData)
     
     const option = {
       tooltip: { trigger: 'axis' },
@@ -969,6 +921,6 @@ onUnmounted(() => {
 .card-header {
   font-size: 14px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 </style>

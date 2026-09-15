@@ -729,17 +729,17 @@
           <el-descriptions-item label="业务ID">{{ currentReport.businessId || '-' }}</el-descriptions-item>
           <el-descriptions-item label="举报人">
             {{ currentReport.applicantName || '-' }}
-            <div v-if="currentReport.applicantUsername" style="font-size: 12px; color: #606266; margin-top: 4px;">
+            <div v-if="currentReport.applicantUsername" style="font-size: 12px; color: var(--color-text-regular); margin-top: 4px;">
               用户名：{{ currentReport.applicantUsername }}
             </div>
-            <div v-if="currentReport.applicantPhone" style="font-size: 12px; color: #606266;">
+            <div v-if="currentReport.applicantPhone" style="font-size: 12px; color: var(--color-text-regular);">
               电话：{{ currentReport.applicantPhone }}
             </div>
           </el-descriptions-item>
           <el-descriptions-item label="被举报人">
             <div>
               {{ currentReport.reportedUserName || '-' }}
-              <span v-if="currentReport.reportedUserId" style="font-size: 12px; color: #606266; margin-left: 10px;">
+              <span v-if="currentReport.reportedUserId" style="font-size: 12px; color: var(--color-text-regular); margin-left: 10px;">
                 ID：{{ currentReport.reportedUserId }}
               </span>
             </div>
@@ -916,7 +916,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { authApi } from '@/api/auth'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 import {
   Search,
   Edit,
@@ -928,7 +928,7 @@ import {
 } from '@element-plus/icons-vue'
 
 const router = useRouter()
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 // 当前激活的标签页
 const activeTab = ref('posts')
@@ -1091,9 +1091,7 @@ const fetchPostList = async () => {
       startTime: postFilter.startTime,
       endTime: postFilter.endTime
     }
-    console.log('请求帖子列表参数:', params)
     const response = await authApi.getPostList(params)
-    console.log('帖子列表响应:', response)
     postList.value = response?.list || []
     postTotal.value = response?.total || 0
     // 清空选中状态
@@ -1220,7 +1218,6 @@ const handleDeletePost = async (post) => {
     })
     
     // 记录删除操作日志
-    console.log(`[论坛管理] 删除帖子：ID=${post.id}，标题=${post.title}`)
     
     await authApi.deletePost(post.id)
     ElMessage.success('帖子删除成功')
@@ -1258,7 +1255,6 @@ const handleBatchDeletePosts = async () => {
     })
     
     // 记录删除操作日志
-    console.log(`[论坛管理] 批量删除帖子：ID=${selectedPosts.value.map(post => post.id).join(', ')}`)
     
     const postIds = selectedPosts.value.map(post => post.id)
     await authApi.batchDeletePost(postIds)
@@ -1296,13 +1292,9 @@ const fetchCommentList = async () => {
       username: commentFilter.username,
       keyword: commentFilter.keyword
     }
-    console.log('请求评论列表参数:', params)
     const response = await authApi.getCommentList(params)
-    console.log('评论列表响应:', response)
     commentList.value = response?.list || []
     commentTotal.value = response?.total || 0
-    console.log('评论列表数据:', commentList.value)
-    console.log('评论总数:', commentTotal.value)
     // 清空选中状态
     selectedComments.value = []
     if (commentTable.value) {
@@ -1405,7 +1397,6 @@ const handleBatchDeleteComments = async () => {
     })
     
     // 记录删除操作日志
-    console.log(`[论坛管理] 批量删除评论：ID=${selectedComments.value.map(comment => comment.id).join(', ')}`)
     
     const commentIds = selectedComments.value.map(comment => comment.id)
     await authApi.batchDeleteComment(commentIds)
@@ -1442,9 +1433,7 @@ const fetchPostReportList = async () => {
       startTime: postReportFilter.startTime,
       endTime: postReportFilter.endTime
     }
-    console.log('请求帖子举报列表参数:', params)
     const response = await authApi.getPostReportList(params)
-    console.log('帖子举报列表响应:', response)
     postReportList.value = response?.list || []
     postReportTotal.value = response?.total || 0
   } catch (error) {
@@ -1472,9 +1461,7 @@ const fetchCommentReportList = async () => {
       startTime: commentReportFilter.startTime,
       endTime: commentReportFilter.endTime
     }
-    console.log('请求评论举报列表参数:', params)
     const response = await authApi.getCommentReportList(params)
-    console.log('评论举报列表响应:', response)
     commentReportList.value = response?.list || []
     commentReportTotal.value = response?.total || 0
   } catch (error) {
@@ -1669,7 +1656,7 @@ onMounted(() => {
 .forum-manage-container {
   padding: 20px;
   min-height: calc(100vh - 120px);
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
 }
 
 .forum-manage-card {
@@ -1679,7 +1666,7 @@ onMounted(() => {
 .card-header {
   font-size: 18px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .forum-tabs {
@@ -1733,14 +1720,14 @@ onMounted(() => {
   display: flex;
   gap: 20px;
   margin-bottom: 15px;
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
   flex-wrap: wrap;
 }
 
 .post-content {
   line-height: 1.6;
-  color: #303133;
+  color: var(--color-text-primary);
   white-space: pre-wrap;
   margin-bottom: 20px;
   padding: 10px;
@@ -1754,13 +1741,13 @@ onMounted(() => {
 
 .latest-replies h4 {
   margin-bottom: 10px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .reply-item {
   margin-bottom: 15px;
   padding: 10px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
 }
 
@@ -1770,23 +1757,23 @@ onMounted(() => {
   gap: 15px;
   margin-bottom: 5px;
   font-size: 14px;
-  color: #606266;
+  color: var(--color-text-regular);
   flex-wrap: wrap;
 }
 
 .reply-user {
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .reply-content {
   line-height: 1.5;
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 14px;
 }
 
 .reply-to {
-  color: #409eff;
+  color: var(--color-primary);
   margin-right: 5px;
 }
 
@@ -1795,7 +1782,7 @@ onMounted(() => {
 }
 
 .reply-prefix {
-  color: #409eff;
+  color: var(--color-primary);
   font-weight: bold;
   margin-right: 5px;
 }
@@ -1818,7 +1805,7 @@ onMounted(() => {
 
 .log-content {
   padding: 10px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
 }
 </style>

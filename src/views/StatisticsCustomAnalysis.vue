@@ -161,7 +161,7 @@ const startAnalysis = async () => {
   align-items: center;
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .header-left {
@@ -173,7 +173,7 @@ const startAnalysis = async () => {
 .page-title {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .form-card {
@@ -223,7 +223,7 @@ const startAnalysis = async () => {
 }
 
 .meta-label {
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
   font-weight: bold;
   min-width: 80px;
@@ -231,7 +231,7 @@ const startAnalysis = async () => {
 }
 
 .question-text {
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 14px;
   word-break: break-word;
   max-width: 80%;
@@ -245,7 +245,7 @@ const startAnalysis = async () => {
 .analysis-text {
   white-space: pre-wrap;
   line-height: 1.6;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .raw-data-card {
@@ -263,7 +263,7 @@ const startAnalysis = async () => {
   margin: 0;
   font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .empty-data {
@@ -276,13 +276,13 @@ const startAnalysis = async () => {
 }
 
 .hint-text {
-  color: #909399;
+  color: var(--color-text-secondary);
   margin-top: 10px;
 }
 
 .card-subheader {
   font-size: 14px;
   font-weight: bold;
-  color: #606266;
+  color: var(--color-text-regular);
 }
 </style>

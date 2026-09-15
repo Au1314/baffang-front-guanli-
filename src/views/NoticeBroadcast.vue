@@ -107,7 +107,7 @@ const handleReset = () => {
 .card-header {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 /* 表单样式优化 */
@@ -117,32 +117,26 @@ const handleReset = () => {
 
 :deep(.el-form-item__label) {
   font-weight: 500;
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 14px;
 }
 
 :deep(.el-form-item__label.is-required:not(.is-no-asterisk)::before) {
   content: "*";
-  color: #f56c6c;
+  color: var(--color-danger);
   margin-right: 4px;
   font-weight: bold;
 }
 
-:deep(.el-input__wrapper),
-:deep(.el-select__wrapper),
 :deep(.el-textarea__wrapper) {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
 
-:deep(.el-input__wrapper:hover),
-:deep(.el-select__wrapper:hover),
 :deep(.el-textarea__wrapper:hover) {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-:deep(.el-input__wrapper.is-focus),
-:deep(.el-select__wrapper.is-focus),
 :deep(.el-textarea__wrapper.is-focus) {
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
@@ -157,13 +151,13 @@ const handleReset = () => {
 
 /* 字符数统计样式 */
 :deep(.el-input__count) {
-  color: #909399;
+  color: var(--color-text-secondary);
   font-size: 12px;
   padding-top: 4px;
 }
 
 :deep(.el-textarea__count) {
-  color: #909399;
+  color: var(--color-text-secondary);
   font-size: 12px;
   padding-top: 4px;
   text-align: right;
@@ -182,25 +176,25 @@ const handleReset = () => {
 }
 
 :deep(.el-button--primary) {
-  background-color: #409eff;
-  border-color: #409eff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 :deep(.el-button--primary:hover) {
-  background-color: #66b1ff;
-  border-color: #66b1ff;
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 :deep(.el-button--default) {
-  color: #606266;
-  border-color: #dcdfe6;
+  color: var(--color-text-regular);
+  border-color: var(--color-border-base);
   background-color: #fff;
 }
 
 :deep(.el-button--default:hover) {
-  color: #409eff;
+  color: var(--color-primary);
   border-color: #c6e2ff;
-  background-color: #ecf5ff;
+  background-color: var(--color-primary-light);
 }
 
 /* 表单布局优化 */

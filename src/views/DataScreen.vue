@@ -307,7 +307,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
-import * as echarts from 'echarts'
+import echarts from '@/utils/echarts'
 import { 
   User, DataLine, Calendar, Plus, Van, Lightning,
   Top, Connection, ShoppingCart, Warning, Refresh, Loading
@@ -1122,7 +1122,6 @@ const fetchCustomerServiceStats = async () => {
     // 尝试传递时间范围参数
     const response = await authApi.getCustomerServiceStatsOverview({ timeRange: timeRange.value })
     if (response) {
-      console.log('客服统计数据:', response)
       // 这里可以更新客服相关的图表数据
       // 例如，更新用户增长趋势图中的数据
       if (userGrowthChart.value) {
@@ -1165,9 +1164,6 @@ const fetchOtherStats = async () => {
       authApi.getAuditStatistics({ timeRange: timeRange.value })
     ])
     
-    console.log('紧急响应统计数据:', emergencyStats)
-    console.log('论坛统计数据:', forumStats)
-    console.log('审核统计数据:', auditStats)
     
     // 更新紧急响应相关图表数据
     if (emergencyStats) {
@@ -1258,7 +1254,6 @@ const fetchOtherStats = async () => {
 
 // 监听时间范围变化
 const handleTimeRangeChange = () => {
-  console.log('时间范围已切换为:', timeRange.value)
   // 根据时间范围更新数据和图表
   updateChartDataByTimeRange()
   ElMessage.success(`数据已切换到${timeRange.value === 'day' ? '日' : timeRange.value === 'week' ? '周' : timeRange.value === 'month' ? '月' : '年'}视图`)
@@ -1267,7 +1262,6 @@ const handleTimeRangeChange = () => {
 // 根据时间范围更新图表数据
 const updateChartDataByTimeRange = async () => {
   // 这里可以根据时间范围重新请求数据或更新图表
-  console.log('根据时间范围更新图表数据:', timeRange.value)
   // 重新获取数据，确保一个接口失败不影响其他接口
   try {
     await fetchPlatformStats()
@@ -1296,7 +1290,6 @@ const updateChartDataByTimeRange = async () => {
 
 // 数据刷新
 const refreshData = async () => {
-  console.log('自动刷新数据:', new Date().toLocaleTimeString())
   // 获取最新数据，确保一个接口失败不影响其他接口
   try {
     await fetchPlatformStats()

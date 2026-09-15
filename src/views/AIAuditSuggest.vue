@@ -148,6 +148,10 @@
 import { ref, reactive, computed } from 'vue'
 import { authApi } from '@/api/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  getPriorityType,
+  getPriorityText as getPriorityName
+} from '@/utils/statusMaps'
 
 // 请求表单
 const requestForm = reactive({
@@ -235,28 +239,6 @@ const formatJson = (data) => {
 const showParams = (params) => {
   paramsDialogData.value = params
   paramsDialogVisible.value = true
-}
-
-// 获取优先级类型
-const getPriorityType = (priority) => {
-  const typeMap = {
-    0: 'info',
-    1: 'primary',
-    2: 'warning',
-    3: 'danger'
-  }
-  return typeMap[priority] || 'info'
-}
-
-// 获取优先级名称
-const getPriorityName = (priority) => {
-  const nameMap = {
-    0: '低',
-    1: '普通',
-    2: '高',
-    3: '紧急'
-  }
-  return nameMap[priority] || `优先级${priority}`
 }
 
 // 获取建议类型
@@ -372,7 +354,7 @@ const executeDecision = async () => {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .form-card {
@@ -402,11 +384,11 @@ const executeDecision = async () => {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 15px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .analysis-content {
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   padding: 15px;
   border-radius: 4px;
 }
@@ -420,7 +402,7 @@ const executeDecision = async () => {
 
 .item-label {
   font-weight: bold;
-  color: #606266;
+  color: var(--color-text-regular);
   width: 80px;
   flex-shrink: 0;
 }
@@ -428,7 +410,7 @@ const executeDecision = async () => {
 .analysis-reason {
   flex: 1;
   line-height: 1.5;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .actions-list {
@@ -439,47 +421,47 @@ const executeDecision = async () => {
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .raw-analysis {
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  color: #303133;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .detailed-analysis {
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   padding: 15px;
   border-radius: 4px;
   line-height: 1.8;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .analysis-title {
   font-size: 16px;
   font-weight: bold;
   margin: 15px 0 10px 0;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .analysis-subtitle {
   font-size: 14px;
   font-weight: bold;
   margin: 10px 0 8px 0;
-  color: #606266;
+  color: var(--color-text-regular);
 }
 
 .params-content {
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   padding: 10px;
   border-radius: 4px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  color: #303133;
+  color: var(--color-text-primary);
   margin: 0;
   overflow-x: auto;
 }

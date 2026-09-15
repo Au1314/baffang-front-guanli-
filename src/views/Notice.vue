@@ -88,7 +88,7 @@ onMounted(() => {
 .notice-container {
   padding: 20px;
   min-height: calc(100vh - 120px);
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -109,7 +109,7 @@ onMounted(() => {
 .card-header {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: var(--color-text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -146,7 +146,7 @@ onMounted(() => {
   line-height: 48px;
   font-size: 14px;
   font-weight: 500;
-  color: #606266;
+  color: var(--color-text-regular);
   transition: all 0.3s ease;
   margin: 0 4px;
   border-radius: 8px;
@@ -154,12 +154,12 @@ onMounted(() => {
 }
 
 :deep(.el-menu-item:hover) {
-  color: #409eff;
+  color: var(--color-primary);
   background-color: rgba(64, 158, 255, 0.05) !important;
 }
 
 :deep(.el-menu-item.is-active) {
-  color: #409eff;
+  color: var(--color-primary);
   background-color: rgba(64, 158, 255, 0.1) !important;
   font-weight: 600;
 }
@@ -172,7 +172,7 @@ onMounted(() => {
   transform: translateY(-50%);
   width: 3px;
   height: 24px;
-  background-color: #409eff;
+  background-color: var(--color-primary);
   border-radius: 0 3px 3px 0;
 }
 
@@ -224,14 +224,14 @@ onMounted(() => {
 
 :deep(.el-dialog__header) {
   background-color: #fafafa;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
   padding: 16px 20px;
 }
 
 :deep(.el-dialog__title) {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 :deep(.el-dialog__body) {
@@ -240,7 +240,7 @@ onMounted(() => {
 
 :deep(.el-dialog__footer) {
   padding: 16px 20px;
-  border-top: 1px solid #ebeef5;
+  border-top: 1px solid var(--color-border-lighter);
   background-color: #fafafa;
 }
 

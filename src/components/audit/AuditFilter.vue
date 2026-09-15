@@ -129,21 +129,19 @@ const handleReset = () => {
 
 <style scoped>
 .audit-filter {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-4);
 }
 
 .filter-card {
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e7ed;
-  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border-extra-light);
 }
 
 .filter-form {
-  padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--space-3);
   align-items: center;
 }
 
@@ -154,108 +152,27 @@ const handleReset = () => {
 }
 
 :deep(.el-form-item__label) {
-  font-size: 14px;
+  font-size: var(--font-size-base);
   font-weight: 500;
-  color: #606266;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-  margin-right: 8px;
+  color: var(--color-text-regular);
+  margin-right: var(--space-2);
 }
 
-:deep(.el-select),
-:deep(.el-input),
-:deep(.el-date-picker) {
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-:deep(.el-select:hover .el-input__wrapper),
-:deep(.el-input__wrapper:hover) {
-  border-color: #c0c4cc;
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
-}
-
-:deep(.el-select:focus .el-input__wrapper),
-:deep(.el-input__wrapper.is-focus) {
-  border-color: #409eff;
-  box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
-}
-
-.search-button {
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
-}
-
-.search-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(64, 158, 255, 0.4);
-}
-
-.reset-button {
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-  transition: all 0.3s ease;
-  border: 1px solid #dcdfe6;
-  background: white;
-  color: #606266;
-}
-
-.reset-button:hover {
-  border-color: #c0c4cc;
-  color: #303133;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.more-button {
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-  transition: all 0.3s ease;
-  border: 1px solid #dcdfe6;
-  background: white;
-  color: #606266;
-}
-
-.more-button:hover {
-  border-color: #409eff;
-  color: #409eff;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
-}
-
-/* 响应式设计 */
 @media (max-width: 768px) {
   .filter-form {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--space-3);
   }
-  
+
   :deep(.el-form-item) {
     width: 100%;
   }
-  
+
   :deep(.el-select),
   :deep(.el-input),
   :deep(.el-date-picker) {
     width: 100% !important;
-  }
-  
-  .search-button,
-  .reset-button,
-  .more-button {
-    width: 100%;
-    margin-bottom: 8px;
   }
 }
 </style>

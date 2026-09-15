@@ -86,17 +86,17 @@
         <el-descriptions-item label="业务ID">{{ currentReport.businessId || '-' }}</el-descriptions-item>
         <el-descriptions-item label="举报人">
           {{ currentReport.applicantName || '-' }}
-          <div v-if="currentReport.applicantUsername" style="font-size: 12px; color: #606266; margin-top: 4px;">
+          <div v-if="currentReport.applicantUsername" style="font-size: 12px; color: var(--color-text-regular); margin-top: 4px;">
             用户名：{{ currentReport.applicantUsername }}
           </div>
-          <div v-if="currentReport.applicantPhone" style="font-size: 12px; color: #606266;">
+          <div v-if="currentReport.applicantPhone" style="font-size: 12px; color: var(--color-text-regular);">
             电话：{{ currentReport.applicantPhone }}
           </div>
         </el-descriptions-item>
         <el-descriptions-item label="被举报人">
           <div>
             {{ currentReport.reportedUserName || '-' }}
-            <span v-if="currentReport.reportedUserId" style="font-size: 12px; color: #606266; margin-left: 10px;">
+            <span v-if="currentReport.reportedUserId" style="font-size: 12px; color: var(--color-text-regular); margin-left: 10px;">
               ID：{{ currentReport.reportedUserId }}
             </span>
           </div>
@@ -219,6 +219,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { authApi } from '@/api/auth'
+import { getAuditStatusType as getStatusType } from '@/utils/statusMaps'
 
 // 加载状态
 const loading = ref(false)
@@ -255,7 +256,6 @@ const detailLoading = ref(false)
 // 格式化附件列表
 const formattedAttachments = computed(() => {
   // 添加调试日志
-  console.log('formattedAttachments计算属性调用，currentReport:', currentReport.value)
   
   if (!currentReport.value) return []
   
@@ -275,13 +275,11 @@ const formattedAttachments = computed(() => {
     if (typeof attach === 'string') {
       // 清理可能存在的空格和引号
       const cleaned = attach.trim().replace(/^[`'"\s]+|[`'"\s]+$/g, '')
-      console.log('清理后的附件:', cleaned)
       return cleaned
     }
     return ''
   }).filter(attach => attach)
   
-  console.log('最终附件列表:', result)
   return result
 })
 
@@ -336,20 +334,6 @@ const auditRules = {
       trigger: 'blur'
     }
   ]
-}
-
-// 获取状态类型
-const getStatusType = (status) => {
-  switch (status) {
-    case 1: // 审核中
-      return 'warning'
-    case 2: // 已通过
-      return 'success'
-    case 3: // 已拒绝
-      return 'danger'
-    default:
-      return 'info'
-  }
 }
 
 // 获取举报列表
@@ -494,7 +478,7 @@ onMounted(() => {
 
 .log-content {
   padding: 10px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
 }
 </style>

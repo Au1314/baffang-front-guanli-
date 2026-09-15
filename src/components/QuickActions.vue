@@ -2,8 +2,8 @@
   <div class="quick-actions">
     <h3 class="panel-title">{{ title }}</h3>
     <div class="action-buttons">
-      <el-button 
-        v-for="(action, index) in actions" 
+      <el-button
+        v-for="(action, index) in actions"
         :key="index"
         @click="handleAction(action)"
         :type="action.type || 'primary'"
@@ -22,8 +22,12 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAdminStore } from '@/store/adminStore'
-import { User, Message } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/store/authStore'
+import {
+  User, UserFilled, OfficeBuilding, Monitor, DocumentChecked, Van,
+  Warning, Tickets, ChatDotRound, Document, Tools, Timer, ChatLineSquare, InfoFilled
+} from '@element-plus/icons-vue'
+import { roleColorByDesc } from '@/utils/roleColors'
 
 const props = defineProps({
   title: {
@@ -41,85 +45,75 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 // 快捷操作数据
 const actions = computed(() => {
   if (props.customActions) {
     return props.customActions
   }
-  
+
   const actionList = []
-  
-  if (adminStore.isSuperAdmin || adminStore.isNormalAdmin) {
+
+  if (authStore.isSuperAdmin || authStore.isNormalAdmin) {
     // 管理员快捷操作
     actionList.push(
       { label: '用户管理', path: '/system/user', icon: User },
-      { label: '角色管理', path: '/system/role', icon: User },
-      { label: '平台管理', path: '/platform-manage', icon: Message },
-      { label: '数据大屏', path: '/data-screen', icon: Message }
+      { label: '角色管理', path: '/system/role', icon: UserFilled },
+      { label: '平台管理', path: '/platform-manage', icon: OfficeBuilding },
+      { label: '数据大屏', path: '/data-screen', icon: Monitor }
     )
-  } else if (adminStore.isAuditor) {
+  } else if (authStore.isAuditor) {
     // 审核员快捷操作
     actionList.push(
-      { label: '私人电桩审核', path: '/audit/private-station', icon: Message },
-      { label: '车主认证审核', path: '/audit/car-owner', icon: Message },
-      { label: '投诉审核', path: '/audit/charging-complaint', icon: Message },
-      { label: '故障审核', path: '/audit/charging-fault', icon: Message }
+      { label: '私人电桩审核', path: '/audit/private-station', icon: DocumentChecked },
+      { label: '车主认证审核', path: '/audit/car-owner', icon: Van },
+      { label: '投诉审核', path: '/audit/charging-complaint', icon: Warning },
+      { label: '故障审核', path: '/audit/charging-fault', icon: Tools }
     )
-  } else if (adminStore.isCustomerService) {
+  } else if (authStore.isCustomerService) {
     // 客服快捷操作
     actionList.push(
-      { label: '工单管理', path: '/customer-service', icon: Message },
-      { label: '投诉处理', path: '/audit/charging-complaint', icon: Message },
-      { label: '用户反馈', path: '/audit/comment-report', icon: Message },
-      { label: '交易申诉', path: '/audit/transaction-appeal', icon: User }
+      { label: '工单管理', path: '/customer-service', icon: Tickets },
+      { label: '投诉处理', path: '/audit/charging-complaint', icon: Warning },
+      { label: '用户反馈', path: '/audit/comment-report', icon: ChatDotRound },
+      { label: '交易申诉', path: '/audit/transaction-appeal', icon: Document }
     )
-  } else if (adminStore.isEmergencyResponder) {
+  } else if (authStore.isEmergencyResponder) {
     // 紧急响应人员快捷操作
     actionList.push(
-      { label: '紧急事件', path: '/emergency', icon: Message },
-      { label: '故障处理', path: '/audit/charging-fault', icon: Message },
-      { label: '事件记录', path: '/emergency', icon: User },
-      { label: '资源调度', path: '/emergency', icon: Message }
+      { label: '紧急事件', path: '/emergency', icon: Warning },
+      { label: '故障处理', path: '/audit/charging-fault', icon: Tools },
+      { label: '事件记录', path: '/emergency', icon: Document },
+      { label: '资源调度', path: '/emergency', icon: Timer }
     )
-  } else if (adminStore.isForumAdmin) {
+  } else if (authStore.isForumAdmin) {
     // 论坛管理员快捷操作
     actionList.push(
-      { label: '论坛管理', path: '/forum-manage', icon: Message },
-      { label: '帖子审核', path: '/forum-manage', icon: Message },
-      { label: '评论管理', path: '/forum-manage', icon: Message },
-      { label: '违规处理', path: '/forum-manage', icon: User }
+      { label: '论坛管理', path: '/forum-manage', icon: ChatDotRound },
+      { label: '帖子审核', path: '/forum-manage', icon: DocumentChecked },
+      { label: '评论管理', path: '/forum-manage', icon: ChatLineSquare },
+      { label: '违规处理', path: '/forum-manage', icon: Warning }
     )
   } else {
     // 默认快捷操作
     actionList.push(
       { label: '个人中心', path: '/profile', icon: User },
-      { label: '帮助文档', path: '/', icon: Message },
-      { label: '系统设置', path: '/', icon: User },
-      { label: '关于我们', path: '/', icon: Message }
+      { label: '帮助文档', path: '/', icon: Document },
+      { label: '系统设置', path: '/', icon: Tools },
+      { label: '关于我们', path: '/', icon: InfoFilled }
     )
   }
-  
+
   return actionList
 })
 
-// 获取操作按钮样式
-const getActionStyle = (action) => {
-  const role = adminStore.adminTypeDesc
-  const roleColors = {
-    '超级管理员': '#1890ff',
-    '普通管理员': '#40a9ff',
-    '审核员': '#52c41a',
-    '客服': '#fa8c16',
-    '紧急响应人员': '#ff4d4f',
-    '论坛管理员': '#722ed1'
-  }
-  
-  const color = roleColors[role] || '#1890ff'
-  
+// 获取操作按钮样式：用角色色作为按钮边/字强调色
+const getActionStyle = () => {
+  const { main, light } = roleColorByDesc(authStore.adminTypeDesc)
   return {
-    '--action-color': color
+    '--action-color': main,
+    '--action-color-light': light
   }
 }
 
@@ -135,33 +129,32 @@ const handleAction = (action) => {
 
 <style scoped>
 .quick-actions {
-  margin-bottom: 30px;
+  margin-bottom: var(--space-5);
 }
 
 .panel-title {
-  margin: 0 0 24px 0;
-  color: #303133;
-  font-size: 20px;
+  margin: 0 0 var(--space-4) 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .panel-title::before {
   content: '';
   display: inline-block;
-  width: 4px;
-  height: 20px;
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
+  width: 3px;
+  height: 18px;
+  background: var(--color-primary);
   border-radius: 2px;
 }
 
 .action-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3);
 }
 
 .action-btn {
@@ -169,89 +162,58 @@ const handleAction = (action) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
-  border: 2px solid var(--action-color, #1890ff);
-  background: white;
-  color: var(--action-color, #1890ff);
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-}
-
-.action-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(24, 144, 255, 0.1), transparent);
-  transition: all 0.6s ease;
-}
-
-.action-btn:hover::before {
-  left: 100%;
+  gap: 8px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-card);
+  color: var(--color-text-regular);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast),
+              background var(--transition-fast),
+              color var(--transition-fast);
 }
 
 .action-btn:hover {
-  background: var(--action-color, #1890ff);
-  color: white;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(24, 144, 255, 0.4);
-  border-color: var(--action-color, #1890ff);
+  border-color: var(--action-color, var(--color-primary));
+  background: var(--action-color-light, var(--color-primary-light));
+  color: var(--action-color, var(--color-primary));
 }
 
-.action-btn:active {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);
+.action-btn:focus-visible {
+  outline: 2px solid var(--action-color, var(--color-primary));
+  outline-offset: 2px;
 }
 
 .action-btn-large {
-  height: 72px;
-  font-size: 16px;
+  height: 56px;
+  font-size: var(--font-size-base);
   font-weight: 500;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
 }
 
 .action-btn-medium {
-  height: 60px;
-  font-size: 14px;
+  height: 48px;
+  font-size: var(--font-size-base);
   font-weight: 500;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
 }
 
 .action-btn-small {
-  height: 48px;
-  font-size: 13px;
+  height: 40px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
 }
 
 .action-icon-space {
-  width: 4px;
+  width: 2px;
 }
 
-/* 响应式设计 */
 @media (max-width: 768px) {
   .action-buttons {
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  
-  .action-btn-large {
-    height: 64px;
-    font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .action-buttons {
     grid-template-columns: 1fr;
-  }
-  
-  .action-btn-large {
-    height: 56px;
   }
 }
 </style>

@@ -254,7 +254,7 @@ onMounted(() => {
 .card-header {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .action-bar {
@@ -291,7 +291,7 @@ onMounted(() => {
 
 .highlight {
   font-weight: bold;
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .empty-container {

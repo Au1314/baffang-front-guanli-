@@ -1,12 +1,12 @@
 <template>
-  <el-card 
-    :shadow="shadow" 
-    :class="[`role-card-${roleType}`, `role-card-${size}`]"
+  <el-card
+    :shadow="shadow"
+    :class="[`role-card-${size}`]"
     :style="cardStyle"
   >
     <template #header v-if="header">
       <div class="card-header">
-        <span>{{ header }}</span>
+        <span class="card-title">{{ header }}</span>
         <slot name="header-extra"></slot>
       </div>
     </template>
@@ -16,7 +16,8 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
+import { roleColorByDesc } from '@/utils/roleColors'
 
 const props = defineProps({
   header: {
@@ -25,7 +26,7 @@ const props = defineProps({
   },
   shadow: {
     type: String,
-    default: 'hover'
+    default: 'never'
   },
   size: {
     type: String,
@@ -37,78 +38,53 @@ const props = defineProps({
   }
 })
 
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
-const actualRoleType = computed(() => {
-  return props.roleType || adminStore.adminTypeDesc
-})
+const actualRoleType = computed(() => props.roleType || authStore.adminTypeDesc)
 
 const cardStyle = computed(() => {
-  const roleColors = {
-    '超级管理员': '#1890ff',
-    '普通管理员': '#40a9ff',
-    '审核员': '#52c41a',
-    '客服': '#fa8c16',
-    '紧急响应人员': '#ff4d4f',
-    '论坛管理员': '#722ed1'
-  }
-  
-  const color = roleColors[actualRoleType.value] || '#1890ff'
-  
+  const { main, light } = roleColorByDesc(actualRoleType.value)
   return {
-    '--role-color': color
+    '--role-color': main,
+    '--role-color-light': light
   }
 })
 </script>
 
 <style scoped>
-.role-card {
-  transition: all 0.3s ease;
-}
-
-.role-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-}
-
 .role-card-default {
   height: 100%;
+  border: 1px solid var(--color-border-extra-light);
+  border-radius: var(--radius-lg);
 }
 
 .role-card-small {
-  padding: 10px;
+  padding: var(--space-2);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.card-title {
   font-weight: 600;
-  color: var(--role-color, #1890ff);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  position: relative;
+  padding-left: var(--space-3);
 }
 
-/* 角色专属样式 */
-.role-card-超级管理员 {
-  border-left: 4px solid #1890ff;
-}
-
-.role-card-普通管理员 {
-  border-left: 4px solid #40a9ff;
-}
-
-.role-card-审核员 {
-  border-left: 4px solid #52c41a;
-}
-
-.role-card-客服 {
-  border-left: 4px solid #fa8c16;
-}
-
-.role-card-紧急响应人员 {
-  border-left: 4px solid #ff4d4f;
-}
-
-.role-card-论坛管理员 {
-  border-left: 4px solid #722ed1;
+.card-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 14px;
+  background: var(--role-color, var(--color-primary));
+  border-radius: 2px;
 }
 </style>

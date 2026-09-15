@@ -44,7 +44,7 @@
               >
                 <template #error>
                   <div class="avatar-placeholder">
-                    <el-icon :size="40" color="#909399">
+                    <el-icon :size="40" color="var(--color-text-secondary)">
                       <PictureFilled />
                     </el-icon>
                     <span>点击上传头像</span>
@@ -52,7 +52,7 @@
                 </template>
               </el-image>
               <div v-else class="avatar-placeholder">
-                <el-icon :size="40" color="#909399">
+                <el-icon :size="40" color="var(--color-text-secondary)">
                   <PictureFilled />
                 </el-icon>
                 <span>点击上传头像</span>
@@ -65,7 +65,7 @@
               @click="removeAvatar"
               class="avatar-delete-btn"
             >
-              <el-icon color="#f56c6c"><Delete /></el-icon>
+              <el-icon color="var(--color-danger)"><Delete /></el-icon>
             </el-button>
           </div>
           <div class="avatar-hint">
@@ -187,7 +187,6 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock, Monitor, Key, CircleCheck, CircleClose, PictureFilled, Delete, Upload } from '@element-plus/icons-vue'
 import { authApi } from '@/api/auth'
-import bcrypt from 'bcryptjs'
 
 const router = useRouter()
 const registerFormRef = ref()
@@ -402,7 +401,7 @@ const goToLogin = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf5 100%);
+  background: linear-gradient(135deg, var(--color-bg-page) 0%, #e4eaf5 100%);
   position: relative;
   overflow: hidden;
 }
@@ -554,8 +553,8 @@ const goToLogin = () => {
 }
 
 .invite-code-status.success {
-  background-color: #f0f9eb;
-  color: #67c23a;
+  background-color: var(--color-success-light);
+  color: var(--color-success);
   border: 1px solid #e1f3d8;
 }
 
@@ -565,8 +564,8 @@ const goToLogin = () => {
 }
 
 .invite-code-status.error {
-  background-color: #fef0f0;
-  color: #f56c6c;
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
   border: 1px solid #fde2e2;
 }
 
@@ -626,7 +625,7 @@ const goToLogin = () => {
 .avatar-placeholder span {
   margin-top: 8px;
   font-size: 12px;
-  color: #909399;
+  color: var(--color-text-secondary);
   display: block;
   text-align: center;
   width: 100%;
@@ -656,7 +655,7 @@ const goToLogin = () => {
 }
 
 .avatar-hint small {
-  color: #909399;
+  color: var(--color-text-secondary);
   font-size: 12px;
   display: block;
   text-align: center;

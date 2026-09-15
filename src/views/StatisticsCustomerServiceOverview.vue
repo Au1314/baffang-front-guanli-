@@ -208,7 +208,7 @@ onMounted(() => {
 .card-header {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .action-bar {
@@ -241,10 +241,10 @@ onMounted(() => {
 .section-title {
   font-size: 18px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   margin-bottom: 16px;
   padding-left: 8px;
-  border-left: 4px solid #409eff;
+  border-left: 4px solid var(--color-primary);
 }
 
 .stats-grid {
@@ -254,7 +254,7 @@ onMounted(() => {
 }
 
 .stats-card-item {
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
   transition: all 0.3s ease;
   min-height: 160px;
   display: flex;
@@ -271,7 +271,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
   justify-content: center;
 }
@@ -279,13 +279,13 @@ onMounted(() => {
 .stats-icon {
   margin-right: 8px;
   font-size: 18px;
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .stats-item-value {
   font-size: 36px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   text-align: center;
 }
 

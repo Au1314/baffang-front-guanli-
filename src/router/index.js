@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 import { ElMessage } from 'element-plus'
 
 const routes = [
@@ -521,7 +521,7 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  const adminStore = useAdminStore()
+  const authStore = useAuthStore()
   
   // 设置页面标题
   if (to.meta.title) {
@@ -530,10 +530,10 @@ router.beforeEach((to, from, next) => {
   
   // 检查是否需要登录
   if (to.meta.requiresAuth) {
-    if (adminStore.isLoggedIn) {
+    if (authStore.isLoggedIn) {
       // 检查权限
       if (to.meta.permission) {
-        if (adminStore.hasPermission(to.meta.permission)) {
+        if (authStore.hasPermission(to.meta.permission)) {
           next()
         } else {
           ElMessage.error('没有访问权限')
@@ -547,7 +547,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // 如果已经登录，访问登录页则跳转到首页
-    if (to.path === '/login' && adminStore.isLoggedIn) {
+    if (to.path === '/login' && authStore.isLoggedIn) {
       next('/')
     } else {
       next()

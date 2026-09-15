@@ -259,7 +259,7 @@ const resetForm = () => {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--color-text-primary);
   text-align: center;
 }
 
@@ -302,7 +302,7 @@ const resetForm = () => {
 .info-item {
   text-align: center;
   padding: 20px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 8px;
   transition: all 0.3s ease;
 }
@@ -314,34 +314,34 @@ const resetForm = () => {
 
 .info-label {
   font-size: 14px;
-  color: #606266;
+  color: var(--color-text-regular);
   margin-bottom: 12px;
 }
 
 .info-value {
   font-size: 24px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .info-value.high {
-  color: #f56c6c;
+  color: var(--color-danger);
 }
 
 .info-value.medium {
-  color: #e6a23c;
+  color: var(--color-warning);
 }
 
 .info-value.low {
-  color: #67c23a;
+  color: var(--color-success);
 }
 
 .info-value.confidence {
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .info-value.priority {
-  color: #909399;
+  color: var(--color-text-secondary);
 }
 
 .section-divider {
@@ -353,14 +353,14 @@ const resetForm = () => {
 }
 
 .json-content {
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   padding: 15px;
   border-radius: 8px;
   overflow-x: auto;
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  color: #303133;
+  color: var(--color-text-primary);
   max-height: 400px;
   overflow-y: auto;
 }

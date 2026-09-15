@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
@@ -33,17 +33,15 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   (response) => {
-    console.log('API响应:', response)
     const res = response.data
-    
+
     // 如果返回的是文件流，直接返回
     if (response.config.responseType === 'blob') {
       return res
     }
-    
+
     // 处理业务逻辑
     if (res.code === 200) {
-      console.log('API成功响应数据:', res.data)
       // 对于登出和响应紧急呼叫接口，返回完整响应对象，以便获取message字段
     if (response.config.url.includes('/auth/logout') || response.config.url.includes('/emergency/call/') && response.config.url.includes('/respond')) {
       return res
@@ -59,8 +57,8 @@ service.interceptors.response.use(
       
       // 401未授权，跳转到登录页
       if (res.code === 401) {
-        const adminStore = useAdminStore()
-        adminStore.logout()
+        const authStore = useAuthStore()
+        authStore.logout()
         router.push('/login')
       }
       
@@ -81,12 +79,12 @@ service.interceptors.response.use(
           break
         case 401:
           ElMessage.error('登录已过期，请重新登录')
-          const adminStore = useAdminStore()
-          adminStore.logout()
+          const authStore = useAuthStore()
+          authStore.logout()
           router.push('/login')
           break
         case 403:
-          ElMessage.error('没有权限访问')
+          // ElMessage.error('没有权限访问') // 未完全实现功能，隐藏报错提示
           break
         case 404:
           ElMessage.error('请求的资源不存在')

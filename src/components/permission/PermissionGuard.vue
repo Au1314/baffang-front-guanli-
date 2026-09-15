@@ -12,7 +12,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 
 const props = defineProps({
   requiredType: {
@@ -25,11 +25,11 @@ const props = defineProps({
   }
 })
 
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 const hasPermission = computed(() => {
   if (!props.requiredType) return true
-  return adminStore.hasPermission(props.requiredType)
+  return authStore.hasPermission(props.requiredType)
 })
 </script>
 

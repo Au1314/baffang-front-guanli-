@@ -346,9 +346,16 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { authApi } from '@/api/auth'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 import AuditFilter from '@/components/audit/AuditFilter.vue'
 import { View, Check, Close } from '@element-plus/icons-vue'
+import {
+  getAuditStatusText,
+  getAuditStatusType,
+  getAuthStatusType,
+  getPriorityText,
+  getPriorityType
+} from '@/utils/statusMaps'
 
 const filterItems = [
   {
@@ -396,7 +403,7 @@ const moreFilterItems = [
 ]
 
 const router = useRouter()
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 // 响应式数据
 const auditList = ref([])
@@ -440,64 +447,9 @@ const getAuditTypeName = (type) => {
   return typeMap[type] || '未知类型'
 }
 
-// 审核状态文本
-const getStatusText = (status) => {
-  const statusMap = {
-    0: '待审核',
-    1: '审核中',
-    2: '已通过',
-    3: '已拒绝',
-    4: '需补充材料',
-    5: '已撤回'
-  }
-  return statusMap[status] || '未知状态'
-}
-
-// 审核状态类型
-const getStatusType = (status) => {
-  const typeMap = {
-    0: 'info',     // 待审核
-    1: 'warning',  // 审核中
-    2: 'success',  // 已通过
-    3: 'danger',   // 已拒绝
-    4: 'warning',  // 需补充材料
-    5: 'info'      // 已撤回
-  }
-  return typeMap[status] || 'info'
-}
-
-// 认证状态类型
-const getAuthStatusType = (authStatus) => {
-  const typeMap = {
-    0: 'info',     // 未认证
-    1: 'warning',  // 审核中
-    2: 'success',  // 已认证
-    3: 'danger'    // 认证失败
-  }
-  return typeMap[authStatus] || 'info'
-}
-
-// 优先级文本
-const getPriorityText = (priority) => {
-  const priorityMap = {
-    0: '低',
-    1: '普通',
-    2: '高',
-    3: '紧急'
-  }
-  return priorityMap[priority] || '普通'
-}
-
-// 优先级类型
-const getPriorityType = (priority) => {
-  const typeMap = {
-    0: 'info',
-    1: 'success',
-    2: 'warning',
-    3: 'danger'
-  }
-  return typeMap[priority] || 'info'
-}
+// 模板沿用简短命名
+const getStatusText = getAuditStatusText
+const getStatusType = getAuditStatusType
 
 // 获取审核列表
 const fetchAuditList = async () => {
@@ -565,7 +517,6 @@ const handleViewDetail = async (row) => {
     // 检查响应数据是否存在
     if (response) {
       currentAudit.value = response
-      console.log('获取到的审核详情数据:', currentAudit.value)
       showAuditDetail.value = true
     } else {
       console.error('API返回数据为空:', response)
@@ -729,7 +680,7 @@ onMounted(() => {
 .private-station-audit-container {
   padding: 24px;
   min-height: 80vh;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   font-family: 'Microsoft YaHei', Arial, sans-serif;
 }
 
@@ -748,21 +699,21 @@ onMounted(() => {
 .card-header {
   font-weight: 600;
   font-size: 18px;
-  color: #333;
+  color: var(--color-text-primary);
   padding: 16px 0;
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid var(--color-border-light);
   margin-bottom: 16px;
 }
 
 /* 描述列表样式优化 */
 :deep(.el-descriptions__item-label) {
   font-weight: 500;
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
 }
 
 :deep(.el-descriptions__item-content) {
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 14px;
 }
 
@@ -772,7 +723,7 @@ onMounted(() => {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e7ed;
+  border: 1px solid var(--color-border-light);
   margin-bottom: 16px;
 }
 
@@ -786,7 +737,7 @@ onMounted(() => {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e7ed;
+  border: 1px solid var(--color-border-light);
   margin-bottom: 24px;
 }
 
@@ -794,8 +745,8 @@ onMounted(() => {
   background-color: #f9fafb;
   font-weight: 600;
   font-size: 14px;
-  color: #303133;
-  border-bottom: 1px solid #e4e7ed;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-light);
   padding: 16px 0;
 }
 
@@ -810,14 +761,14 @@ onMounted(() => {
 }
 
 :deep(.el-table__body-wrapper tr.current-row) {
-  background-color: #ecf5ff !important;
+  background-color: var(--color-primary-light) !important;
 }
 
 :deep(.el-table__body-wrapper td) {
   padding: 16px 0;
   font-size: 14px;
-  color: #606266;
-  border-bottom: 1px solid #e4e7ed;
+  color: var(--color-text-regular);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 /* 单元格文本样式 */
@@ -831,48 +782,42 @@ onMounted(() => {
 
 /* 操作按钮样式 */
 .detail-button {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 6px 12px;
-  font-size: 12px;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
+  font-size: var(--font-size-xs);
+  background: var(--color-primary);
   border: none;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
+  transition: background var(--transition-fast);
 }
 
 .detail-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+  background: var(--color-primary-hover);
 }
 
 .approve-button {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 6px 12px;
-  font-size: 12px;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #67c23a 0%, #409eff 100%);
+  font-size: var(--font-size-xs);
+  background: var(--color-success);
   border: none;
-  box-shadow: 0 2px 8px rgba(103, 194, 58, 0.3);
+  transition: filter var(--transition-fast);
 }
 
 .approve-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(103, 194, 58, 0.4);
+  filter: brightness(1.05);
 }
 
 .reject-button {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 6px 12px;
-  font-size: 12px;
-  transition: all 0.3s ease;
-  background: linear-gradient(135deg, #f56c6c 0%, #f0ad4e 100%);
+  font-size: var(--font-size-xs);
+  background: var(--color-danger);
   border: none;
-  box-shadow: 0 2px 8px rgba(245, 108, 108, 0.3);
+  transition: filter var(--transition-fast);
 }
 
 .reject-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 108, 108, 0.4);
+  filter: brightness(1.05);
 }
 
 /* 分页样式 */
@@ -880,18 +825,12 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 24px;
-  padding: 24px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-radius: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e4e7ed;
-  transition: all 0.3s ease;
-}
-
-.pagination:hover {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border-extra-light);
 }
 
 :deep(.custom-pagination) {
@@ -904,7 +843,7 @@ onMounted(() => {
 :deep(.el-pagination__total) {
   font-size: 14px;
   font-weight: 500;
-  color: #606266;
+  color: var(--color-text-regular);
   margin-right: 0;
 }
 
@@ -916,17 +855,17 @@ onMounted(() => {
   border-radius: 10px;
   font-size: 14px;
   padding: 8px 16px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--color-border-base);
   transition: all 0.3s ease;
 }
 
 :deep(.el-pagination__sizes .el-input .el-input__inner:hover) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
 }
 
 :deep(.el-pagination__sizes .el-input .el-input__inner:focus) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
 }
 
@@ -942,19 +881,19 @@ onMounted(() => {
   font-size: 14px;
   padding: 8px 12px;
   width: 60px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--color-border-base);
   transition: all 0.3s ease;
   height: 36px;
   box-sizing: border-box;
 }
 
 :deep(.el-pagination__jump .el-input .el-input__inner:hover) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
 }
 
 :deep(.el-pagination__jump .el-input .el-input__inner:focus) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
 }
 
@@ -962,17 +901,17 @@ onMounted(() => {
   border-radius: 10px;
   padding: 8px 16px;
   font-size: 14px;
-  color: #606266;
-  border: 1px solid #dcdfe6;
+  color: var(--color-text-regular);
+  border: 1px solid var(--color-border-base);
   background: white;
   transition: all 0.3s ease;
   margin-left: 8px;
 }
 
 :deep(.el-pagination__jump .el-pagination__jump-btn:hover) {
-  color: #409eff;
-  border-color: #409eff;
-  background: #ecf5ff;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
 }
@@ -981,35 +920,32 @@ onMounted(() => {
   border-radius: 10px;
   padding: 8px 16px;
   font-size: 14px;
-  color: #606266;
-  border: 1px solid #dcdfe6;
+  color: var(--color-text-regular);
+  border: 1px solid var(--color-border-base);
   background: white;
   transition: all 0.3s ease;
   margin: 0 4px;
 }
 
 :deep(.el-pagination__button:hover) {
-  color: #409eff;
-  border-color: #409eff;
-  background-color: #ecf5ff;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
 }
 
 :deep(.el-pagination__button--active) {
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
-  border-color: #1890ff;
-  color: white;
-  border-radius: 10px;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-md);
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-  transform: translateY(-1px);
 }
 
 :deep(.el-pagination__button--active:hover) {
-  background: linear-gradient(135deg, #409eff 0%, #69c0ff 100%);
-  border-color: #409eff;
-  box-shadow: 0 6px 16px rgba(64, 158, 255, 0.4);
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 :deep(.el-pagination__prev),
@@ -1017,8 +953,8 @@ onMounted(() => {
   border-radius: 10px;
   padding: 8px 16px;
   font-size: 14px;
-  color: #606266;
-  border: 1px solid #dcdfe6;
+  color: var(--color-text-regular);
+  border: 1px solid var(--color-border-base);
   background: white;
   transition: all 0.3s ease;
   margin: 0 4px;
@@ -1026,18 +962,18 @@ onMounted(() => {
 
 :deep(.el-pagination__prev:hover),
 :deep(.el-pagination__next:hover) {
-  color: #409eff;
-  border-color: #409eff;
-  background-color: #ecf5ff;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
 }
 
 :deep(.el-pagination__prev.is-disabled),
 :deep(.el-pagination__next.is-disabled) {
-  color: #c0c4cc;
-  border-color: #ebeef5;
-  background-color: #f5f7fa;
+  color: var(--color-text-placeholder);
+  border-color: var(--color-border-lighter);
+  background-color: var(--color-bg-page);
   cursor: not-allowed;
 }
 
@@ -1045,9 +981,9 @@ onMounted(() => {
 :deep(.el-pagination__next.is-disabled:hover) {
   transform: none;
   box-shadow: none;
-  border-color: #ebeef5;
-  background-color: #f5f7fa;
-  color: #c0c4cc;
+  border-color: var(--color-border-lighter);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-placeholder);
 }
 
 /* 标签样式 */
@@ -1064,16 +1000,17 @@ onMounted(() => {
 }
 
 :deep(.el-dialog__header) {
-  padding: 20px 24px;
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
-  color: white;
-  border-radius: 12px 12px 0 0;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-lighter);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 :deep(.el-dialog__title) {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: white;
+  color: var(--color-text-primary);
 }
 
 :deep(.el-dialog) {

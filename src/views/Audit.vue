@@ -107,141 +107,103 @@ onMounted(() => {
 
 <style scoped>
 .audit-container {
-  padding: 24px;
-  min-height: calc(100vh - 120px);
-  background-color: #f5f7fa;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
+  min-height: 100%;
 }
 
 .audit-card {
-  margin-bottom: 24px;
-  border-radius: 12px;
+  margin-bottom: var(--space-5);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e7ed;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border-extra-light);
 }
 
 .card-header {
-  font-size: 20px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #303133;
-  padding: 20px 24px;
-  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
-  color: white;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--color-text-primary);
 }
 
-/* 审核管理布局 */
 .audit-content {
   display: flex;
-  gap: 24px;
-  padding: 24px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e7ed;
+  gap: var(--space-5);
 }
 
-/* 左侧导航菜单 */
 .audit-nav {
-  width: 240px;
+  width: 220px;
   flex-shrink: 0;
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e4e7ed;
+  background: var(--color-bg-page);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
 }
 
 .audit-menu {
   border-right: none;
   background-color: transparent;
-  border-radius: 8px;
-  overflow: hidden;
 }
 
-/* 导航菜单项样式 */
 :deep(.el-menu-item) {
-  height: 52px;
-  line-height: 52px;
-  margin: 4px 0;
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-left: 20px;
-  color: #606266;
+  height: 44px;
+  line-height: 44px;
+  margin: 2px 0;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-regular);
+  padding-left: var(--space-4) !important;
 }
 
 :deep(.el-menu-item:hover) {
-  background-color: #ecf5ff !important;
-  color: #409eff !important;
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
+  background-color: var(--color-bg-card) !important;
+  color: var(--color-primary) !important;
 }
 
 :deep(.el-menu-item.is-active) {
-  background-color: #1890ff !important;
-  color: white !important;
-  font-weight: 500;
-  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-  transform: translateX(4px);
+  background-color: var(--color-primary-light) !important;
+  color: var(--color-primary) !important;
+  font-weight: 600;
+  position: relative;
 }
 
-:deep(.el-menu-item.is-active:hover) {
-  background-color: #409eff !important;
+:deep(.el-menu-item.is-active::before) {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--color-primary);
+  border-radius: 0 3px 3px 0;
 }
 
-/* 右侧内容区域 */
 .audit-main {
   flex: 1;
   min-width: 0;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e7ed;
-}
-
-/* 面包屑导航样式 */
-:deep(.el-breadcrumb) {
-  margin-bottom: 24px;
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
 }
 
 :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
-  color: #1890ff;
+  color: var(--color-primary);
   font-weight: 500;
 }
 
-/* 响应式设计 */
 @media (max-width: 768px) {
   .audit-content {
     flex-direction: column;
   }
-  
+
   .audit-nav {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-4);
   }
-  
+
   .audit-menu {
     display: flex;
     overflow-x: auto;
     flex-wrap: nowrap;
   }
-  
+
   :deep(.el-menu-item) {
     white-space: nowrap;
     margin: 0 4px;
-  }
-  
-  .audit-main {
-    padding: 20px;
   }
 }
 </style>

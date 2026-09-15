@@ -376,6 +376,8 @@ import { ref, onMounted, computed } from 'vue'
 import { getAuditRecordList, getAuditRecordDetail, getAuditRecordLogs } from '@/api/audit'
 import { ElMessage } from 'element-plus'
 import { Document } from '@element-plus/icons-vue'
+import { formatDateTime } from '@/utils/dateFormat'
+import { usePagination } from '@/composables/usePagination'
 
 // 筛选条件表单
 const filterForm = ref({
@@ -386,15 +388,16 @@ const filterForm = ref({
   dateRange: []
 })
 
-// 分页参数
-const pagination = ref({
-  pageNum: 1,
-  pageSize: 10
+// 分页 —— 走统一的 usePagination composable
+const { pageNum, pageSize, total, handleSizeChange, handleCurrentChange } = usePagination({
+  pageSize: 10,
+  onChange: () => fetchAuditRecordList()
 })
+// 模板兼容：保留 pagination.pageNum 写法
+const pagination = reactive({ pageNum, pageSize })
 
-// 表格数据
+// 表格数据（total 由 usePagination 提供）
 const auditList = ref([])
-const total = ref(0)
 const loading = ref(false)
 
 // 详情弹窗相关数据
@@ -463,24 +466,11 @@ const getPriorityTagType = (priority) => {
   return priorityMap[priority] || 'info'
 }
 
-// 格式化日期时间
-const formatDateTime = (datetime) => {
-  if (!datetime) return ''
-  const date = new Date(datetime)
-  return date.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  })
-}
-
 // 构建请求参数
 const buildRequestParams = () => {
   const params = {
-    ...pagination.value,
+    pageNum: pagination.pageNum,
+    pageSize: pagination.pageSize,
     // 只有当值为null或undefined时才设为undefined，避免0值被过滤掉
     auditType: filterForm.value.auditType === null || filterForm.value.auditType === undefined ? undefined : filterForm.value.auditType,
     status: filterForm.value.status === null || filterForm.value.status === undefined ? undefined : filterForm.value.status,
@@ -510,7 +500,7 @@ const fetchAuditRecordList = async () => {
 
 // 查询
 const handleSearch = () => {
-  pagination.value.pageNum = 1 // 重置页码
+  pagination.pageNum = 1 // 重置页码
   fetchAuditRecordList()
 }
 
@@ -523,22 +513,8 @@ const handleReset = () => {
     keyword: '',
     dateRange: []
   }
-  pagination.value = {
-    pageNum: 1,
-    pageSize: 10
-  }
-  fetchAuditRecordList()
-}
-
-// 分页大小改变
-const handleSizeChange = (size) => {
-  pagination.value.pageSize = size
-  fetchAuditRecordList()
-}
-
-// 当前页改变
-const handleCurrentChange = (current) => {
-  pagination.value.pageNum = current
+  pagination.pageNum = 1
+  pagination.pageSize = 10
   fetchAuditRecordList()
 }
 
@@ -642,7 +618,7 @@ onMounted(() => {
 
 .total-count {
   font-size: 14px;
-  color: #606266;
+  color: var(--color-text-regular);
   font-weight: normal;
 }
 
@@ -675,7 +651,7 @@ onMounted(() => {
   white-space: pre-wrap;
   line-height: 1.6;
   padding: 12px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
 }
 
@@ -694,13 +670,13 @@ onMounted(() => {
 
 .attachment-item .el-icon {
   font-size: 16px;
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .empty-log {
   text-align: center;
   padding: 20px;
-  color: #909399;
+  color: var(--color-text-secondary);
 }
 
 .dialog-empty {
@@ -715,7 +691,7 @@ onMounted(() => {
 
 .log-item {
   padding: 16px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
@@ -730,11 +706,11 @@ onMounted(() => {
 
 .log-operator {
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .log-action {
-  color: #409eff;
+  color: var(--color-primary);
   font-weight: 500;
 }
 
@@ -747,44 +723,44 @@ onMounted(() => {
 }
 
 .status-label {
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
 }
 
 .status-arrow {
-  color: #909399;
+  color: var(--color-text-secondary);
   font-weight: bold;
 }
 
 .log-opinion {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #e4e7ed;
+  border-top: 1px solid var(--color-border-light);
 }
 
 .opinion-label {
   display: block;
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
   margin-bottom: 8px;
   font-weight: 500;
 }
 
 .opinion-content {
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 14px;
   line-height: 1.6;
   white-space: pre-wrap;
   background-color: #fff;
   padding: 12px;
   border-radius: 4px;
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
 }
 
 /* 详情弹窗中的日志样式 */
 .detail-log-item {
   padding: 12px;
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -800,7 +776,7 @@ onMounted(() => {
 .detail-log-item .log-opinion {
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px dashed #e4e7ed;
+  border-top: 1px dashed var(--color-border-light);
 }
 
 .detail-log-item .opinion-label {
@@ -817,7 +793,7 @@ onMounted(() => {
 
 .el-timeline-item__timestamp {
   font-size: 12px;
-  color: #909399;
+  color: var(--color-text-secondary);
 }
 
 /* 确保标签之间有适当的间距 */

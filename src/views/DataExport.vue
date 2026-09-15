@@ -293,7 +293,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { authApi } from '@/api/auth'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 import {
   Document,
   List,
@@ -305,7 +305,7 @@ import {
   RefreshRight
 } from '@element-plus/icons-vue'
 
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 // 导出加载状态
 const exportLoading = reactive({
@@ -526,7 +526,7 @@ const handleRollback = async () => {
 
 // 组件挂载时检查权限
 onMounted(() => {
-  if (!adminStore.isSuperAdmin) {
+  if (!authStore.isSuperAdmin) {
     ElMessage.error('没有访问权限')
   }
 })
@@ -536,7 +536,7 @@ onMounted(() => {
 .data-export-container {
   padding: 20px;
   min-height: calc(100vh - 120px);
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
 }
 
 .data-export-card {
@@ -548,7 +548,7 @@ onMounted(() => {
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .export-functions {
@@ -559,7 +559,7 @@ onMounted(() => {
 
 .export-card {
   margin-bottom: 10px;
-  border-left: 4px solid #409eff;
+  border-left: 4px solid var(--color-primary);
 }
 
 .export-card-header {
@@ -567,18 +567,18 @@ onMounted(() => {
   align-items: center;
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .card-icon {
   margin-right: 8px;
-  color: #409eff;
+  color: var(--color-primary);
   font-size: 18px;
 }
 
 .export-description {
   margin: 15px 0;
-  color: #606266;
+  color: var(--color-text-regular);
   line-height: 1.5;
 }
 
@@ -597,7 +597,7 @@ onMounted(() => {
 }
 
 .backup-card {
-  border-left-color: #67c23a;
+  border-left-color: var(--color-success);
 }
 
 .backup-section,
@@ -610,7 +610,7 @@ onMounted(() => {
 
 .rollback-section {
   margin-top: 30px;
-  border-top: 1px solid #ebeef5;
+  border-top: 1px solid var(--color-border-lighter);
   padding-top: 25px;
 }
 
@@ -619,7 +619,7 @@ onMounted(() => {
   margin: 0 0 10px 0;
   font-size: 14px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .progress-content {
@@ -629,6 +629,6 @@ onMounted(() => {
 .progress-text {
   margin-top: 15px;
   text-align: center;
-  color: #606266;
+  color: var(--color-text-regular);
 }
 </style>

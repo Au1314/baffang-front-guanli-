@@ -129,7 +129,7 @@ onMounted(async () => {
 .card-header {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: var(--color-text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -148,7 +148,7 @@ onMounted(async () => {
 
 :deep(.statistics-tabs .el-tabs__header) {
   margin-bottom: 0;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
 }
 
 :deep(.statistics-tabs .el-tabs__nav) {
@@ -163,20 +163,20 @@ onMounted(async () => {
   padding: 0 24px;
   font-size: 14px;
   font-weight: 500;
-  color: #909399;
+  color: var(--color-text-secondary);
   border-radius: 8px 8px 0 0;
   transition: all 0.3s ease;
   margin-right: 2px;
 }
 
 :deep(.statistics-tabs .el-tabs__item:hover) {
-  color: #409eff;
-  background-color: #ecf5ff;
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
 }
 
 :deep(.statistics-tabs .el-tabs__item.is-active) {
   color: #fff;
-  background-color: #409eff;
+  background-color: var(--color-primary);
   font-weight: 600;
   position: relative;
 }
@@ -188,7 +188,7 @@ onMounted(async () => {
   left: 0;
   right: 0;
   height: 3px;
-  background-color: #409eff;
+  background-color: var(--color-primary);
   border-radius: 3px 3px 0 0;
 }
 
@@ -212,7 +212,7 @@ onMounted(async () => {
   font-size: 13px;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--color-border-base);
 }
 
 .tab-buttons .el-button:hover {
@@ -221,8 +221,8 @@ onMounted(async () => {
 }
 
 .tab-buttons .el-button--success {
-  background-color: #67c23a;
-  border-color: #67c23a;
+  background-color: var(--color-success);
+  border-color: var(--color-success);
   color: #fff;
 }
 
@@ -232,8 +232,8 @@ onMounted(async () => {
 }
 
 .tab-buttons .el-button--info {
-  background-color: #909399;
-  border-color: #909399;
+  background-color: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
   color: #fff;
 }
 
@@ -243,8 +243,8 @@ onMounted(async () => {
 }
 
 .tab-buttons .el-button--warning {
-  background-color: #e6a23c;
-  border-color: #e6a23c;
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
   color: #fff;
 }
 
@@ -254,8 +254,8 @@ onMounted(async () => {
 }
 
 .tab-buttons .el-button--danger {
-  background-color: #f56c6c;
-  border-color: #f56c6c;
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
   color: #fff;
 }
 
@@ -265,14 +265,14 @@ onMounted(async () => {
 }
 
 .tab-buttons .el-button--primary.is-plain {
-  background-color: #ecf5ff;
+  background-color: var(--color-primary-light);
   border-color: #d9ecff;
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .tab-buttons .el-button--primary.is-plain:hover {
-  background-color: #409eff;
-  border-color: #409eff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
   color: #fff;
 }
 

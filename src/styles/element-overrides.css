@@ -1,0 +1,32 @@
+/* 统一 Element Plus 组件视觉。
+   主色/文字色/边框色/状态色与 Element Plus 默认一致，无需重复覆盖；
+   这里只处理各页面各自为政的部分：表头浅灰底、表格圆角、输入框圆角、focus 光环。 */
+
+:root {
+  /* 表头浅灰底（Element Plus 默认白色，与卡片风格不搭） */
+  --el-table-header-bg-color: var(--color-bg-hover);
+}
+
+/* 表格：统一 8px 圆角 */
+.el-table {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* 表头加粗 */
+.el-table th.el-table__cell {
+  font-weight: 600;
+}
+
+/* 输入框 / 选择框：统一 8px 圆角 + 平滑过渡 */
+.el-input__wrapper,
+.el-select__wrapper {
+  border-radius: var(--radius-md);
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* 统一 focus 光环 */
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused {
+  box-shadow: var(--shadow-focus) !important;
+}

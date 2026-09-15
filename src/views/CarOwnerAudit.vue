@@ -287,6 +287,12 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { authApi } from '@/api/auth'
+import {
+  getAuditStatusText,
+  getAuditStatusType,
+  getPriorityText,
+  getPriorityType
+} from '@/utils/statusMaps'
 
 // 响应式数据
 const auditList = ref([])
@@ -322,53 +328,9 @@ const auditForm = reactive({
   opinion: ''
 })
 
-// 审核状态文本
-const getStatusText = (status) => {
-  const statusMap = {
-    0: '待审核',
-    1: '审核中',
-    2: '已通过',
-    3: '已拒绝',
-    4: '需补充材料',
-    5: '已撤回'
-  }
-  return statusMap[status] || '未知状态'
-}
-
-// 审核状态类型
-const getStatusType = (status) => {
-  const typeMap = {
-    0: 'info',
-    1: 'warning',
-    2: 'success',
-    3: 'danger',
-    4: 'warning',
-    5: 'info'
-  }
-  return typeMap[status] || 'info'
-}
-
-// 优先级文本
-const getPriorityText = (priority) => {
-  const priorityMap = {
-    0: '低',
-    1: '普通',
-    2: '高',
-    3: '紧急'
-  }
-  return priorityMap[priority] || '普通'
-}
-
-// 优先级类型
-const getPriorityType = (priority) => {
-  const typeMap = {
-    0: 'info',
-    1: 'success',
-    2: 'warning',
-    3: 'danger'
-  }
-  return typeMap[priority] || 'info'
-}
+// 模板沿用 getStatusText/getStatusType 命名，走统一映射
+const getStatusText = getAuditStatusText
+const getStatusType = getAuditStatusType
 
 // 获取审核列表
 const fetchAuditList = async () => {

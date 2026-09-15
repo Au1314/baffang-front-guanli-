@@ -131,7 +131,6 @@ import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft, Search, QuestionFilled, InfoFilled, Document, Close, RefreshRight } from '@element-plus/icons-vue'
 import { authApi } from '@/api/auth'
-import axios from 'axios'
 
 // 问题输入
 const question = ref('')
@@ -139,8 +138,8 @@ const question = ref('')
 const loading = ref(false)
 // 分析结果
 const analysisResult = ref(null)
-// 取消令牌源，用于取消请求
-const cancelTokenSource = ref(null)
+// AbortController，用于取消请求
+const abortController = ref(null)
 // 错误状态，用于显示重试按钮
 const errorState = ref(false)
 // 错误信息
@@ -160,18 +159,16 @@ const handleAnalysis = async () => {
   loading.value = true
   
   try {
-    // 创建新的取消令牌源
-    cancelTokenSource.value = axios.CancelToken.source()
-    
+    abortController.value = new AbortController()
+
     const result = await authApi.quickAnalysis(question.value.trim(), {
-      cancelToken: cancelTokenSource.value.token
+      signal: abortController.value.signal
     })
     analysisResult.value = result
     ElMessage.success('分析完成')
   } catch (error) {
-    // 忽略取消请求的错误
-    if (axios.isCancel(error)) {
-      console.log('分析请求已取消:', error.message)
+    // 忽略取消请求的错误（axios v1 取消时 code === 'ERR_CANCELED'）
+    if (error.code === 'ERR_CANCELED' || error.name === 'CanceledError') {
       ElMessage.info('分析已取消')
       return
     }
@@ -195,15 +192,14 @@ const handleAnalysis = async () => {
     ElMessage.error(errorMsg)
   } finally {
     loading.value = false
-    // 重置取消令牌源
-    cancelTokenSource.value = null
+    abortController.value = null
   }
 }
 
 // 取消分析请求
 const cancelAnalysis = () => {
-  if (cancelTokenSource.value) {
-    cancelTokenSource.value.cancel('用户取消了分析请求')
+  if (abortController.value) {
+    abortController.value.abort()
   }
 }
 
@@ -259,7 +255,7 @@ const formatTime = (timeStr) => {
   justify-content: space-between;
   font-size: 18px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   gap: 10px;
 }
 
@@ -269,7 +265,7 @@ const formatTime = (timeStr) => {
 
 .header-icon {
   font-size: 20px;
-  color: #909399;
+  color: var(--color-text-secondary);
   cursor: help;
 }
 
@@ -287,7 +283,7 @@ const formatTime = (timeStr) => {
 
 .tip-text {
   margin-top: 10px;
-  color: #909399;
+  color: var(--color-text-secondary);
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -298,7 +294,7 @@ const formatTime = (timeStr) => {
   background-color: #fafafa;
   padding: 25px;
   border-radius: 8px;
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -313,12 +309,12 @@ const formatTime = (timeStr) => {
 .result-title {
   font-size: 18px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .result-content {
   line-height: 1.8;
-  color: #303133;
+  color: var(--color-text-primary);
   font-size: 15px;
 }
 
@@ -326,22 +322,22 @@ const formatTime = (timeStr) => {
 .result-content :deep(.md-h2) {
   font-size: 22px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   margin: 25px 0 15px 0;
   padding-bottom: 10px;
-  border-bottom: 2px solid #409eff;
+  border-bottom: 2px solid var(--color-primary);
 }
 
 .result-content :deep(.md-h3) {
   font-size: 18px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   margin: 20px 0 10px 0;
 }
 
 .result-content :deep(.md-bold) {
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .result-content :deep(.md-list) {
@@ -367,19 +363,19 @@ const formatTime = (timeStr) => {
 
 .empty-icon {
   font-size: 64px;
-  color: #c0c4cc;
+  color: var(--color-text-placeholder);
 }
 
 .empty-text h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   margin-bottom: 8px;
 }
 
 .empty-text p {
   font-size: 14px;
-  color: #909399;
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -391,6 +387,6 @@ const formatTime = (timeStr) => {
   background-color: #fafafa;
   padding: 25px;
   border-radius: 8px;
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
 }
 </style>

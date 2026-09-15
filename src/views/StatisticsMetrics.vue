@@ -94,7 +94,7 @@ const props = defineProps({
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
 }
 
 .metric-card:hover {
@@ -133,7 +133,7 @@ const props = defineProps({
 
 .metric-label {
   font-size: 14px;
-  color: #606266;
+  color: var(--color-text-regular);
   margin-bottom: 12px;
   font-weight: 500;
   line-height: 1.4;
@@ -142,13 +142,13 @@ const props = defineProps({
 .metric-value {
   font-size: 32px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   line-height: 1.1;
   transition: all 0.3s ease;
 }
 
 .metric-card:hover .metric-value {
-  color: #409eff;
+  color: var(--color-primary);
   transform: scale(1.05);
 }
 

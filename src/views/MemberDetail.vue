@@ -39,11 +39,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { authApi } from '@/api/auth'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
 
 const router = useRouter()
 const route = useRoute()
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
 
 // 响应式数据
 const memberDetail = ref({})
@@ -52,10 +52,10 @@ const loading = ref(false)
 // 获取角色类型名称
 const getRoleTypeName = (type) => {
   const roleMap = {
-    [adminStore.AdminType.NORMAL_ADMIN]: '普通管理员',
-    [adminStore.AdminType.AUDITOR]: '审核员',
-    [adminStore.AdminType.CUSTOMER_SERVICE]: '客服',
-    [adminStore.AdminType.EMERGENCY_RESPONDER]: '紧急响应人员'
+    [authStore.AdminType.NORMAL_ADMIN]: '普通管理员',
+    [authStore.AdminType.AUDITOR]: '审核员',
+    [authStore.AdminType.CUSTOMER_SERVICE]: '客服',
+    [authStore.AdminType.EMERGENCY_RESPONDER]: '紧急响应人员'
   }
   return roleMap[type] || '未知类型'
 }
@@ -110,7 +110,7 @@ onMounted(() => {
 .card-title {
   font-size: 20px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 :deep(.el-descriptions-item__label) {

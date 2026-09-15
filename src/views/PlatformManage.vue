@@ -257,10 +257,10 @@
                     </el-form-item>
                     <el-form-item label="权限类型" required>
                       <el-select v-model="inviteForm.targetType" placeholder="请选择权限类型" style="width: 100%">
-                        <el-option label="普通管理员" :value="adminStore.AdminType.NORMAL_ADMIN" />
-                        <el-option label="审核员" :value="adminStore.AdminType.AUDITOR" />
-                        <el-option label="客服" :value="adminStore.AdminType.CUSTOMER_SERVICE" />
-                        <el-option label="紧急响应人员" :value="adminStore.AdminType.EMERGENCY_RESPONDER" />
+                        <el-option label="普通管理员" :value="authStore.AdminType.NORMAL_ADMIN" />
+                        <el-option label="审核员" :value="authStore.AdminType.AUDITOR" />
+                        <el-option label="客服" :value="authStore.AdminType.CUSTOMER_SERVICE" />
+                        <el-option label="紧急响应人员" :value="authStore.AdminType.EMERGENCY_RESPONDER" />
                         <el-option label="论坛管理员" :value="5" />
                       </el-select>
                     </el-form-item>
@@ -343,7 +343,7 @@
                           >
                             复制
                           </el-button>
-                          <span v-else style="color: #909399; font-size: 12px;">
+                          <span v-else style="color: var(--color-text-secondary); font-size: 12px;">
                             不可用
                           </span>
                           
@@ -440,10 +440,10 @@
           <el-form-item label="新角色" required>
             <el-select v-model="newRoleType" placeholder="请选择新角色" style="width: 100%">
               <!-- 只有超级管理员可以选择普通管理员 -->
-              <el-option v-if="isSuperAdmin" label="普通管理员" :value="adminStore.AdminType.NORMAL_ADMIN" />
-              <el-option label="审核员" :value="adminStore.AdminType.AUDITOR" />
-              <el-option label="客服" :value="adminStore.AdminType.CUSTOMER_SERVICE" />
-              <el-option label="紧急响应人员" :value="adminStore.AdminType.EMERGENCY_RESPONDER" />
+              <el-option v-if="isSuperAdmin" label="普通管理员" :value="authStore.AdminType.NORMAL_ADMIN" />
+              <el-option label="审核员" :value="authStore.AdminType.AUDITOR" />
+              <el-option label="客服" :value="authStore.AdminType.CUSTOMER_SERVICE" />
+              <el-option label="紧急响应人员" :value="authStore.AdminType.EMERGENCY_RESPONDER" />
               <!-- 只有超级管理员可以选择论坛管理员 -->
               <el-option v-if="isSuperAdmin" label="论坛管理员" :value="5" />
             </el-select>
@@ -552,24 +552,24 @@
 <script setup>
 import { ref, reactive, computed, onMounted, nextTick, watch, onUnmounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import * as echarts from 'echarts'
-import { useAdminStore } from '@/store/adminStore'
+import { useAuthStore } from '@/store/authStore'
+import { useInviteCodeStore } from '@/store/inviteCodeStore'
 import { authApi } from '@/api/auth'
 import { useRouter } from 'vue-router'
 import { CopyDocument } from '@element-plus/icons-vue'
 
 
-// 实例化adminStore
-const adminStore = useAdminStore()
+const authStore = useAuthStore()
+const inviteCodeStore = useInviteCodeStore()
 const router = useRouter()
 
 // 标签页状态
 const activeTab = ref('member')
 
 // 权限相关计算属性
-const isSuperAdmin = computed(() => adminStore.isSuperAdmin)
-const isNormalAdmin = computed(() => adminStore.isNormalAdmin)
-const currentAdminType = computed(() => adminStore.adminType)
+const isSuperAdmin = computed(() => authStore.isSuperAdmin)
+const isNormalAdmin = computed(() => authStore.isNormalAdmin)
+const currentAdminType = computed(() => authStore.adminType)
 
 // 成员管理数据
 const memberList = ref([])
@@ -629,8 +629,8 @@ const inviteForm = reactive({
   expireHours: 72 // 过期小时数
 })
 
-const inviteCodeList = computed(() => adminStore.inviteCodeList)
-const loading = computed(() => adminStore.inviteCodeLoading)
+const inviteCodeList = computed(() => inviteCodeStore.inviteCodeList)
+const loading = computed(() => inviteCodeStore.inviteCodeLoading)
 const generating = ref(false)
 const invitePage = ref(1)
 const invitePageSize = ref(10)
@@ -648,10 +648,10 @@ const handleSelectionChange = (selection) => {
 
 const getRoleTypeName = (type) => {
   const roleMap = {
-    [adminStore.AdminType.NORMAL_ADMIN]: '普通管理员',
-    [adminStore.AdminType.AUDITOR]: '审核员',
-    [adminStore.AdminType.CUSTOMER_SERVICE]: '客服',
-    [adminStore.AdminType.EMERGENCY_RESPONDER]: '紧急响应人员'
+    [authStore.AdminType.NORMAL_ADMIN]: '普通管理员',
+    [authStore.AdminType.AUDITOR]: '审核员',
+    [authStore.AdminType.CUSTOMER_SERVICE]: '客服',
+    [authStore.AdminType.EMERGENCY_RESPONDER]: '紧急响应人员'
   }
   return roleMap[type] || '未知类型'
 }
@@ -659,10 +659,10 @@ const getRoleTypeName = (type) => {
 // 获取角色标签类型
 const getRoleTypeTag = (type) => {
   const roleTagMap = {
-    [adminStore.AdminType.NORMAL_ADMIN]: 'primary', // 普通管理员用蓝色
-    [adminStore.AdminType.AUDITOR]: 'success', // 审核员用绿色
-    [adminStore.AdminType.CUSTOMER_SERVICE]: 'info', // 客服用灰色
-    [adminStore.AdminType.EMERGENCY_RESPONDER]: 'warning', // 紧急响应人员用橙色
+    [authStore.AdminType.NORMAL_ADMIN]: 'primary', // 普通管理员用蓝色
+    [authStore.AdminType.AUDITOR]: 'success', // 审核员用绿色
+    [authStore.AdminType.CUSTOMER_SERVICE]: 'info', // 客服用灰色
+    [authStore.AdminType.EMERGENCY_RESPONDER]: 'warning', // 紧急响应人员用橙色
     5: 'danger' // 论坛管理员用红色
   }
   return roleTagMap[type] || 'info'
@@ -715,7 +715,7 @@ const handleGenerateInviteCode = async () => {
       expireHours: inviteForm.expireHours
     }
     
-    const response = await adminStore.generateInviteCode(requestData)
+    const response = await inviteCodeStore.generateInviteCode(requestData)
 
     // 处理API响应，根据返回格式调整
     // 注意：响应拦截器已经将成功响应的data提取出来，所以直接处理response
@@ -746,12 +746,12 @@ const handleGenerateInviteCode = async () => {
 
 const fetchInviteCodeList = async () => {
   try {
-    const response = await adminStore.getInviteCodeList({
+    const response = await inviteCodeStore.getInviteCodeList({
       page: invitePage.value,
       pageSize: invitePageSize.value
     })
     // API直接返回邀请码数组，没有total字段
-    inviteTotal.value = adminStore.inviteCodeList.length
+    inviteTotal.value = inviteCodeStore.inviteCodeList.length
   } catch (error) {
     console.error('获取邀请码列表错误:', error)
     ElMessage.error('获取邀请码列表失败')
@@ -771,7 +771,6 @@ const handleInvitePageChange = (page) => {
 // 获取成员列表
 const fetchMemberList = async () => {
   try {
-    console.log('fetchMemberList函数被调用')
     memberLoading.value = true
     
     const params = {
@@ -782,7 +781,6 @@ const fetchMemberList = async () => {
     // 使用authApi.getMemberList方法获取成员列表
     const response = await authApi.getMemberList(params)
     
-    console.log('fetchMemberList API响应:', response)
     
     // 确保response是有效的对象
     if (!response || typeof response !== 'object') {
@@ -796,7 +794,6 @@ const fetchMemberList = async () => {
     memberList.value = response.list || []
     memberTotal.value = response.total || 0
     
-    console.log('获取成员列表成功，共', memberTotal.value, '条记录')
   } catch (error) {
     console.error('获取成员列表失败:', error)
     ElMessage.error('获取成员列表失败：' + (error.message || '未知错误'))
@@ -867,7 +864,7 @@ const submitEditRole = async () => {
   }
 
   // 权限检查：只有超级管理员可以设置为普通管理员
-  if (newRoleType.value === adminStore.AdminType.NORMAL_ADMIN && !isSuperAdmin.value) {
+  if (newRoleType.value === authStore.AdminType.NORMAL_ADMIN && !isSuperAdmin.value) {
     ElMessage.error('只有超级管理员可以设置成员为普通管理员')
     return
   }
@@ -935,7 +932,7 @@ const copyAllCodes = async () => {
 // 切换邀请码状态
 const handleToggleInviteCodeStatus = async (codeId, newStatus) => {
   try {
-    await adminStore.updateInviteCodeStatus(codeId, newStatus)
+    await inviteCodeStore.updateInviteCodeStatus(codeId, newStatus)
     ElMessage.success(newStatus === 1 ? '邀请码已禁用' : '邀请码已启用')
     fetchInviteCodeList() // 刷新列表
   } catch (error) {
@@ -959,7 +956,7 @@ const handleDeleteInviteCode = async (codeId, code) => {
     )
     
     // 调用删除API
-    await adminStore.deleteInviteCode(codeId)
+    await inviteCodeStore.deleteInviteCode(codeId)
     ElMessage.success('邀请码已删除')
     fetchInviteCodeList() // 刷新列表
   } catch (error) {
@@ -995,7 +992,7 @@ const handleBatchDelete = async () => {
     const ids = selectedInviteCodes.value.map(code => code.id)
     
     // 调用批量删除API
-    const response = await adminStore.batchDeleteInviteCode(ids)
+    const response = await inviteCodeStore.batchDeleteInviteCode(ids)
     
     // 显示删除结果
     // 检查响应中是否有successCount和failCount
@@ -1030,7 +1027,7 @@ let inviteTabInitialized = false
 // 检查是否可以管理该成员
 const canManageMember = (member) => {
   // 额外安全检查：超级管理员永远不能被管理
-  if (member.type === adminStore.AdminType.SUPER_ADMIN) {
+  if (member.type === authStore.AdminType.SUPER_ADMIN) {
     return false
   }
   
@@ -1042,7 +1039,7 @@ const canManageMember = (member) => {
   // 普通管理员只能管理权限比自己低的成员
   if (isNormalAdmin.value) {
     // 普通管理员只能管理权限比自己低的成员，且不能管理其他管理员
-    return member.type > adminStore.AdminType.NORMAL_ADMIN
+    return member.type > authStore.AdminType.NORMAL_ADMIN
   }
   
   return false
@@ -1099,7 +1096,6 @@ const fetchLogList = async () => {
     }
     
     const response = await authApi.getLogList(params)
-    console.log('日志列表响应:', response)
     
     // 处理API响应
     if (response && response.list) {
@@ -1168,7 +1164,6 @@ const fetchLogDetail = async (logId) => {
   try {
     logDetailLoading.value = true
     const response = await authApi.getLogDetail(logId)
-    console.log('日志详情响应:', response)
     
     // 处理API响应
     if (response) {
@@ -1225,7 +1220,7 @@ onUnmounted(() => {
 .platform-manage-container {
   padding: 20px;
   min-height: calc(100vh - 120px);
-  background-color: #f5f7fa;
+  background-color: var(--color-bg-page);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -1279,14 +1274,14 @@ onUnmounted(() => {
 
 :deep(.el-dialog__header) {
   background-color: #fafafa;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
   padding: 16px 20px;
 }
 
 :deep(.el-dialog__title) {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 :deep(.el-dialog__body) {
@@ -1295,7 +1290,7 @@ onUnmounted(() => {
 
 :deep(.el-dialog__footer) {
   padding: 16px 20px;
-  border-top: 1px solid #ebeef5;
+  border-top: 1px solid var(--color-border-lighter);
   background-color: #fafafa;
 }
 
@@ -1307,13 +1302,13 @@ onUnmounted(() => {
 :deep(.el-descriptions__header) {
   background-color: #fafafa;
   padding: 12px 16px;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
 }
 
 :deep(.el-descriptions__title) {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 :deep(.el-descriptions__body) {
@@ -1321,7 +1316,7 @@ onUnmounted(() => {
 }
 
 :deep(.el-descriptions__row) {
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
 }
 
 :deep(.el-descriptions__row:last-child) {
@@ -1330,14 +1325,14 @@ onUnmounted(() => {
 
 :deep(.el-descriptions__label) {
   font-weight: 500;
-  color: #606266;
+  color: var(--color-text-regular);
   padding: 12px 16px;
   background-color: #fafafa;
 }
 
 :deep(.el-descriptions__content) {
   padding: 12px 16px;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 /* 响应式设计 */
@@ -1399,7 +1394,7 @@ onUnmounted(() => {
   margin: 0;
   padding: 0 20px;
   background-color: #fafafa;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
 }
 
 :deep(.el-tabs__nav) {
@@ -1416,7 +1411,7 @@ onUnmounted(() => {
   line-height: 56px;
   font-size: 14px;
   font-weight: 500;
-  color: #606266;
+  color: var(--color-text-regular);
   transition: all 0.3s ease;
   border-radius: 8px 8px 0 0;
   margin: 0 4px;
@@ -1424,21 +1419,21 @@ onUnmounted(() => {
 }
 
 :deep(.el-tabs__item:hover) {
-  color: #409eff;
+  color: var(--color-primary);
   background-color: rgba(64, 158, 255, 0.05);
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: #409eff;
+  color: var(--color-primary);
   background-color: #fff;
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
   border-bottom-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   font-weight: 600;
 }
 
 :deep(.el-tabs__active-bar) {
-  background-color: #409eff;
+  background-color: var(--color-primary);
   height: 3px;
   border-radius: 3px;
   bottom: 0;
@@ -1453,7 +1448,7 @@ onUnmounted(() => {
 .card-header {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: var(--color-text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1495,9 +1490,9 @@ onUnmounted(() => {
 :deep(.el-table th) {
   background-color: #fafafa;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary);
   padding: 12px 0;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
 }
 
 :deep(.el-table tr:hover > td) {
@@ -1549,13 +1544,13 @@ onUnmounted(() => {
 }
 
 .operation-buttons .detail-button {
-  background-color: #409eff;
-  border-color: #409eff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .operation-buttons .edit-button {
-  background-color: #e6a23c;
-  border-color: #e6a23c;
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
   color: #fff;
 }
 
@@ -1580,36 +1575,36 @@ onUnmounted(() => {
 :deep(.custom-pagination .el-pagination__jump .el-input__inner) {
   border-radius: 6px;
   height: 32px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--color-border-base);
   transition: all 0.3s ease;
 }
 
 :deep(.custom-pagination .el-pagination__jump .el-input__inner:hover) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
 }
 
 :deep(.custom-pagination .el-pagination__jump .el-input__inner:focus) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
 }
 
 :deep(.custom-pagination .el-pagination__button) {
   border-radius: 6px;
   transition: all 0.3s ease;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--color-border-base);
 }
 
 :deep(.custom-pagination .el-pagination__button:hover) {
-  border-color: #409eff;
-  color: #409eff;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
 }
 
 :deep(.custom-pagination .el-pagination__button--active) {
-  background-color: #409eff;
-  border-color: #409eff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
   color: #fff;
 }
 
@@ -1626,37 +1621,37 @@ onUnmounted(() => {
 :deep(.custom-pagination .el-pagination__sizes .el-select .el-input__inner) {
   border-radius: 6px;
   height: 32px;
-  border: 1px solid #dcdfe6;
+  border: 1px solid var(--color-border-base);
   transition: all 0.3s ease;
 }
 
 :deep(.custom-pagination .el-pagination__sizes .el-select .el-input__inner:hover) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
 }
 
 :deep(.custom-pagination .el-pagination__sizes .el-select .el-input__inner:focus) {
-  border-color: #409eff;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
 }
 
 .filter-bar .el-button--primary:hover {
-  background-color: #66b1ff;
-  border-color: #66b1ff;
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
 }
 
 .filter-bar .el-button:not(.el-button--primary) {
   background-color: #fff;
-  border-color: #dcdfe6;
-  color: #606266;
+  border-color: var(--color-border-base);
+  color: var(--color-text-regular);
 }
 
 .filter-bar .el-button:not(.el-button--primary):hover {
-  border-color: #409eff;
-  color: #409eff;
-  background-color: #ecf5ff;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15);
 }
@@ -1666,7 +1661,7 @@ onUnmounted(() => {
   padding: 16px;
   background-color: #fafafa;
   border-radius: 12px;
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
   transition: all 0.3s ease;
 }
 
@@ -1695,12 +1690,12 @@ onUnmounted(() => {
 
 :deep(.member-table .el-table__header-wrapper) {
   background-color: #f8f9fa;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--color-border-lighter);
 }
 
 :deep(.member-table .el-table__header-cell) {
   font-weight: 600;
-  color: #303133;
+  color: var(--color-text-primary);
   padding: 12px;
   text-align: left;
 }
@@ -1710,7 +1705,7 @@ onUnmounted(() => {
 }
 
 :deep(.member-table .el-table__row:hover) {
-  background-color: #f5f7fa !important;
+  background-color: var(--color-bg-page) !important;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }

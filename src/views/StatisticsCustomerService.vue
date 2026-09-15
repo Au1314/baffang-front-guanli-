@@ -150,7 +150,7 @@ onMounted(() => {
 .card-header {
   font-size: 16px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .stats-content {
@@ -164,12 +164,12 @@ onMounted(() => {
 
 .admin-info h3 {
   margin: 0 0 8px 0;
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .update-time {
   margin: 0;
-  color: #909399;
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
@@ -180,7 +180,7 @@ onMounted(() => {
 }
 
 .stats-card-item {
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--color-border-lighter);
   transition: all 0.3s ease;
 }
 
@@ -193,20 +193,20 @@ onMounted(() => {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  color: #606266;
+  color: var(--color-text-regular);
   font-size: 14px;
 }
 
 .stats-icon {
   margin-right: 8px;
   font-size: 18px;
-  color: #409eff;
+  color: var(--color-primary);
 }
 
 .stats-item-value {
   font-size: 36px;
   font-weight: bold;
-  color: #303133;
+  color: var(--color-text-primary);
   text-align: center;
 }
 

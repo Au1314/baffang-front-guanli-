@@ -1,6 +1,9 @@
+// WS base URL 从 .env.* 里读取；未设置时兜底本地 dev
+const WS_BASE = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8080'
+
 class CustomerServiceWS {
     constructor(token) {
-        this.ws = new WebSocket(`ws://localhost:8080/ws/customer-service?token=${token}`);
+        this.ws = new WebSocket(`${WS_BASE}/ws/customer-service?token=${token}`);
         this.handlers = {};
         this.heartbeatTimer = null;
         this.isConnected = false;
@@ -9,7 +12,6 @@ class CustomerServiceWS {
 
     init() {
         this.ws.onopen = () => {
-            console.log('WebSocket连接成功');
             this.isConnected = true;
             this.startHeartbeat();
             // 自动获取会话列表
@@ -29,7 +31,6 @@ class CustomerServiceWS {
         };
 
         this.ws.onclose = (event) => {
-            console.log('WebSocket连接关闭:', event.code, event.reason);
             this.isConnected = false;
             this.stopHeartbeat();
             // 可以在这里实现重连逻辑

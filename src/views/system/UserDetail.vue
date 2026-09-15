@@ -440,20 +440,20 @@ onMounted(() => {
 .detail-item label {
   width: 100px;
   font-weight: bold;
-  color: #606266;
+  color: var(--color-text-regular);
 }
 
 .detail-item span {
-  color: #303133;
+  color: var(--color-text-primary);
 }
 
 .balance {
-  color: #67c23a;
+  color: var(--color-success);
   font-weight: bold;
 }
 
 .points {
-  color: #e6a23c;
+  color: var(--color-warning);
   font-weight: bold;
 }
 
