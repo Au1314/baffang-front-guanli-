@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Trae IDE internal state
+.trae/
+
+# Personal resume material (not for public repo)
+resume-project.md
