@@ -35,6 +35,11 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data
 
+    // 兼容后端返回字段 msg（后端 Result 为 { code, msg, data }，前端统一使用 message）
+    if (res && typeof res === 'object' && res.msg !== undefined && res.message === undefined) {
+      res.message = res.msg
+    }
+
     // 如果返回的是文件流，直接返回
     if (response.config.responseType === 'blob') {
       return res
@@ -71,7 +76,7 @@ service.interceptors.response.use(
     if (error.response) {
       // 服务器返回错误状态码
       const status = error.response.status
-      const message = error.response.data?.message || '请求失败'
+      const message = error.response.data?.msg || error.response.data?.message || '请求失败'
       
       switch (status) {
         case 400:
